@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: cv-streaming
+    component: cam-sim
+  name: cam-sim
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
+  source:
+    contextDir: cam
+    git:
+      uri: https://github.com/stefan-bergstein/manuela-visual-inspection.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cam-sim:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}

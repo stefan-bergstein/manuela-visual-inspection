@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: cam-sim
+  labels:
+    component: cam-sim
+spec:
+  lookupPolicy:
+    local: true

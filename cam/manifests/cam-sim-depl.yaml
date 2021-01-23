@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cam-sim
+  labels:
+    app: cam-sim
+spec:
+  selector:
+    matchLabels:
+      app: cam-sim
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cam-sim
+    spec:
+      containers:
+        - name: cam-sim
+          image: cam-sim:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: cam-sim-conf
+            - configMapRef:
+                name: kafka-ca-cert
+          volumeMounts:
+            - name: kafka-ca-cert-volume
+              mountPath: /mnt/kafka-ca-cert
+      volumes:
+        - name: kafka-ca-cert-volume
+          configMap:
+            name: kafka-ca-cert
+            defaultMode: 420
+      restartPolicy: Always
