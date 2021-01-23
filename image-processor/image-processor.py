@@ -45,10 +45,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def process_image():
-    app.logger.debug(request.headers)
-
-    # app.logger.debug(request.data.decode("utf-8"))
-    # data = json.loads(request.data.decode("utf-8"))
+    # app.logger.debug(request.headers)
 
     # create a CloudEvent
     event = from_http(request.headers, request.get_data())
@@ -58,9 +55,8 @@ def process_image():
         f"Found {event['id']} from {event['source']} with type "
         f"{event['type']} and specversion {event['specversion']}"
     )
-    app.logger.info(event)
+    # app.logger.info(event)
 
-    
     data = event.data
 
     if 'image' in data and 'time' in data:

@@ -2,12 +2,18 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: image-processor
+  labels:
+    app: visual-inspection
+    app.kubernetes.io/part-of: visual-inspection
 spec:
   template:
     metadata:
     spec:
       containers:
-        - image: quay.io/sbergste/image-processor:latest
+      containers:
+        - name: image-processor
+          # Looks like serving.knative.dev does not work with image streams
+          image: image-registry.openshift-image-registry.svc:5000/sbergste-knative/image-processor:latest
           imagePullPolicy: Always
           envFrom:
           - configMapRef:
