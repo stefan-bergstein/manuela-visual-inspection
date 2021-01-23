@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: image-processor-conf
+data:
+  YOLO_CLASS_FILE: classes.txt
+  CE_ACTION_TYPE: "manuela.image-processor.action"
+  CE_ACTION_SOURCE: "manuela/eventing/image-processor"
+  KN_BROKER_URL: "http://broker-ingress.knative-eventing.svc.cluster.local/sbergste-knative/default"

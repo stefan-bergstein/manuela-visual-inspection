@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: visual-inspection
+    component: image-processor
+  name: image-processor
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: gpu.Dockerfile
+    type: Docker
+  source:
+    contextDir: image-processor
+    git:
+      uri: https://github.com/stefan-bergstein/manuela-visual-inspection.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: image-processor:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}

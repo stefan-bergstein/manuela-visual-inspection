@@ -1,0 +1,14 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: image-processor
+spec:
+  template:
+    metadata:
+    spec:
+      containers:
+        - image: quay.io/sbergste/image-processor:latest
+          imagePullPolicy: Always
+          envFrom:
+          - configMapRef:
+              name: image-processor-conf

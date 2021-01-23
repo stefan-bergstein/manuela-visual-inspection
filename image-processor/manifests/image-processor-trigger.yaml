@@ -1,0 +1,15 @@
+# Knative Eventing Trigger to trigger the image-processor service
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: image-processor
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: dev.knative.kafka.event
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: image-processor
