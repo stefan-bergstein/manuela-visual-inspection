@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}">
+
+  <title>CV Streaming</title>
+
+  <script type="text/javascript"
+          src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js">
+  </script>
+
+</head>
+    <body >
+        <h1>Automated Visual Inspection</h1>
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <p class="p1">Passed:</p>
+                </td>
+                <td>
+                    <p class="p2">Not passed:</p>
+                </td>
+            </tr>              
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-1-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-1-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-1-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-1-2"></p>
+                    </div>
+                </td>
+            </tr>  
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-2-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-2-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-2-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-2-2"></p>
+                    </div>
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-3-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-3-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-3-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-3-2"></p>
+                    </div>
+                </td>
+            </tr> 
+            <tr>
+                <td>
+                    <div >
+                        <img id="streaming-image-4-1" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-4-1"></p>
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <img id="streaming-image-4-2" src="">
+                    </div>
+                    <div >
+                        <p id="streaming-text-4-2"></p>
+                    </div>
+                </td>
+            </tr>             
+            
+        </table>
+
+    </body>
+</html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    const image_1_1 = document.getElementById("streaming-image-1-1");
+    const text_1_1 = document.getElementById("streaming-text-1-1");
+
+    const image_1_2 = document.getElementById("streaming-image-1-2");
+    const text_1_2 = document.getElementById("streaming-text-1-2");
+
+    const image_2_1 = document.getElementById("streaming-image-2-1");
+    const text_2_1 = document.getElementById("streaming-text-2-1");
+
+    const image_2_2 = document.getElementById("streaming-image-2-2");
+    const text_2_2 = document.getElementById("streaming-text-2-2");
+
+    const image_3_1 = document.getElementById("streaming-image-3-1");
+    const text_3_1 = document.getElementById("streaming-text-3-1");
+
+    const image_3_2 = document.getElementById("streaming-image-3-2");
+    const text_3_2 = document.getElementById("streaming-text-3-2");
+
+    const image_4_1 = document.getElementById("streaming-image-4-1");
+    const text_4_1 = document.getElementById("streaming-text-4-1");
+
+    const image_4_2 = document.getElementById("streaming-image-4-2");
+    const text_4_2 = document.getElementById("streaming-text-4-2");
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/ui2', {
+      reconnection: true
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected');
+    });
+
+    socket.on('connect_error', (error) => {
+      console.log('Connect error! ' + error);
+    });
+
+    socket.on('connect_timeout', (error) => {
+      console.log('Connect timeout! ' + error);
+    });
+
+    socket.on('error', (error) => {
+      console.log('Error! ' + error);
+    });
+
+    socket.on('server2ui2', (msg) => {
+
+        if (typeof msg.status === 'undefined') {
+            // No status defined -> use default
+            image_1_1.src = msg.image;
+            text_1_1.innerHTML = msg.text;            
+        } else {
+            if (typeof msg.id === 'undefined') {
+                prefix = ''
+            } else {
+                prefix = 'CAM ' + msg.id + ': ';
+                switch(msg.id) {
+                    case 1:
+                        switch(msg.status) {
+                            case 1:
+                                image_2_2.src = msg.image;
+                                text_2_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_2_1.src = msg.image;
+                                text_2_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    case 2:
+                        switch(msg.status) {
+                            case 1:
+                                image_3_2.src = msg.image;
+                                text_3_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_3_1.src = msg.image;
+                                text_3_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    case 3:
+                        switch(msg.status) {
+                            case 1:
+                                image_4_2.src = msg.image;
+                                text_4_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_4_1.src = msg.image;
+                                text_4_1.innerHTML = prefix + msg.text;
+                        }
+                        break;
+
+                    default:
+                        switch(msg.status) {
+                            case 1:
+                                image_1_2.src = msg.image;
+                                text_1_2.innerHTML = prefix + msg.text;
+                                break;
+                            default:
+                                image_1_1.src = msg.image;
+                                text_1_1.innerHTML = prefix + msg.text;
+                        }
+                }
+
+            }
+            console.log('Status: ' + msg.status);    
+        }
+
+    });
+  });
+</script>

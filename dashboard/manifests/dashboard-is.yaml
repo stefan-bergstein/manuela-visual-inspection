@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: dashboard
+  labels:
+    component: dashboard
+spec:
+  lookupPolicy:
+    local: true

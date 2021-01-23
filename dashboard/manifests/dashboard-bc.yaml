@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: visual-inspection
+    component: dashboard
+  name: dashboard
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
+  source:
+    contextDir: dashboard
+    git:
+      uri: https://github.com/stefan-bergstein/manuela-visual-inspection.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: dashboard:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}

@@ -1,0 +1,21 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  labels:
+    app: visual-inspection
+    component: dashboard
+    app: visual-inspection
+    app.kubernetes.io/part-of: visual-inspection
+  name: dashboard
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+      - name: dashboard
+        image: image-registry.openshift-image-registry.svc:5000/sbergste-knative/dashboard:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
