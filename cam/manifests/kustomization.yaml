@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - cam-sim-bc.yaml
+  - cam-sim-is.yaml
+  - cam-sim-depl.yaml
+  - cam-sim-conf.yaml
+ # - cam-sim-depl-1.yaml
+ # - cam-sim-conf-1.yaml
+

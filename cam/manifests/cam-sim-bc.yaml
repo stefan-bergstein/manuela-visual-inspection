@@ -2,7 +2,7 @@ apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   labels:
-    app: cv-streaming
+    app: visual-inspection
     component: cam-sim
   name: cam-sim
 spec:

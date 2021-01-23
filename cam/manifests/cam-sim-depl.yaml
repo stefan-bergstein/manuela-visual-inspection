@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: cam-sim
   labels:
-    app: cam-sim
+    app: visual-inspection
+    app.kubernetes.io/part-of: visual-inspection
 spec:
   selector:
     matchLabels:
