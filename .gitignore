@@ -1,3 +1,28 @@
+# Darknet Yolo Training data
+ml/darknet/data/metal_yolo/
+
+
+# TMP
+
+ml/tf-test
+
+# Input data
+ml/data/metal_nut/
+
+# predictions
+ml/data/pred/
+ml/data/pred-tf/
+ml/data/tf-model/
+ml/data/release/
+
+# weights file are too big
+*.weights
+
+
+# VS Code
+.vscode/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

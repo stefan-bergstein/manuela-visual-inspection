@@ -9,16 +9,16 @@ spec:
     spec:
       containers:
       - name: darknet-metal-job
-        image: quay.io/sbergste/darknet-gpu-centos8 
+        image: darknet-gpu:latest
         command: ["/bin/sh", "-c"]
         args:
           - echo starting;
             cd /mnt/darknet;
             curl -O https://raw.githubusercontent.com/stefan-bergstein/manuela-visual-inspection/main/ml/darknet/data.zip;
-            unzip data.zip && rm data.zip;
+            unzip -o data.zip && rm data.zip;
             mkdir backup;
             curl -L -O https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137;
-            /darknet/darknet detector train data/metal_data_ocp.data data/yolov4-custom-metal.cfg  yolov4.conv.137 -dont_show -map; 
+            /darknet/darknet detector train data/metal-data.data data/yolov4-custom-metal.cfg  yolov4.conv.137 -dont_show -map; 
             echo done;
         imagePullPolicy: Always
         resources:
