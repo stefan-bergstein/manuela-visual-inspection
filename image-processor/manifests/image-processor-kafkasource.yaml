@@ -4,9 +4,9 @@ metadata:
   name: image-processor-kafka-source
 spec:
   bootstrapServers:
-    - kafka-cluster-kafka-bootstrap.sbergste-knative.svc.cluster.local:9091
-    - kafka-cluster-kafka-bootstrap.sbergste-knative.svc.cluster.local:9092
-    - kafka-cluster-kafka-bootstrap.sbergste-knative.svc.cluster.local:9093
+    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9091
+    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9092
+    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9093
   consumerGroup: image-processor-kafka-source
   sink:
     ref:

@@ -70,9 +70,8 @@ def disconnect_ui2():
 
 @app.route('/', methods=['POST'])
 def process_event():
-    app.logger.debug(request.headers)
-
-    app.logger.debug(request.data.decode("utf-8"))
+    # app.logger.debug(request.headers)
+    # app.logger.debug(request.data.decode("utf-8"))
     data = json.loads(request.data.decode("utf-8"))
 
     sio.emit('server2ui2', data, namespace='/ui2')

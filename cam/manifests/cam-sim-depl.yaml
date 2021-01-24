@@ -22,14 +22,14 @@ spec:
           envFrom:
             - configMapRef:
                 name: cam-sim-conf
-            - configMapRef:
-                name: kafka-ca-cert
-          volumeMounts:
-            - name: kafka-ca-cert-volume
-              mountPath: /mnt/kafka-ca-cert
-      volumes:
-        - name: kafka-ca-cert-volume
-          configMap:
-            name: kafka-ca-cert
-            defaultMode: 420
+#            - configMapRef:
+#                name: kafka-ca-cert
+#          volumeMounts:
+#            - name: kafka-ca-cert-volume
+#              mountPath: /mnt/kafka-ca-cert
+#      volumes:
+#        - name: kafka-ca-cert-volume
+#          configMap:
+#            name: kafka-ca-cert
+#            defaultMode: 420
       restartPolicy: Always

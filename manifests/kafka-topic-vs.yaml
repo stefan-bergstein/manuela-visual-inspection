@@ -3,7 +3,7 @@ kind: KafkaTopic
 metadata:
   name: visual-inspection-images
   labels:
-    strimzi.io/cluster: kmanu-vi
+    strimzi.io/cluster: manu-vi
 spec:
   topicName: visual-inspection-images
   partitions: 1

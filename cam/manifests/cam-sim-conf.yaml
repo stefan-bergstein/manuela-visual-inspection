@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: cam-sim-conf
 data:
-  BOOTSTRAP_SERVER: kafka-cluster-kafka-bootstrap:9092
-#  BOOTSTRAP_SERVER: kafka-cluster-kafka-bootstrap-sbergste-opencv2.apps.ocp4.stormshift.coe.muc.redhat.com:443
+  BOOTSTRAP_SERVER: manu-vi-kafka-bootstrap:9092
+#  BOOTSTRAP_SERVER: 	manu-vi-kafka-bootstrap-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com:443
 #  SECURITY_PROTOCOL: SSL
 #  SSL_CAFILE: /mnt/kafka-ca-cert/kafka-ca.crt
   CAMID: '0'
