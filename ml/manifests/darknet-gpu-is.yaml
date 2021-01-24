@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: darknet-gpu
+  labels:
+    component: darknet-gpu
+spec:
+  lookupPolicy:
+    local: true

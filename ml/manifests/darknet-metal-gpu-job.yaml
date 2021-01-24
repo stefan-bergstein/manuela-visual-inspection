@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: darknet-metal-gpu-job
+  labels:
+    component: darknet-gpu
+spec:
+  template:
+    spec:
+      containers:
+      - name: darknet-metal-job
+        image: quay.io/sbergste/darknet-gpu-centos8 
+        command: ["/bin/sh", "-c"]
+        args:
+          - echo starting;
+            cd /mnt/darknet;
+            curl -O https://raw.githubusercontent.com/stefan-bergstein/manuela-visual-inspection/main/ml/darknet/data.zip;
+            unzip data.zip && rm data.zip;
+            mkdir backup;
+            curl -L -O https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137;
+            /darknet/darknet detector train data/metal_data_ocp.data data/yolov4-custom-metal.cfg  yolov4.conv.137 -dont_show -map; 
+            echo done;
+        imagePullPolicy: Always
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: darknet
+          mountPath: "/mnt/darknet"
+      volumes:
+      - name: darknet
+        persistentVolumeClaim:
+          claimName: darknet-gpu-volume
+      restartPolicy: Never
+  backoffLimit: 4

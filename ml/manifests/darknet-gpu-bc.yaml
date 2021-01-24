@@ -1,0 +1,27 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: darknet
+    component: darknet-gpu
+  name: darknet-gpu
+spec:
+  strategy:
+    dockerStrategy:
+      dockerfilePath: darknet-gpu.Dockerfile
+    type: Docker
+  source:
+    contextDir: ml/manifests
+    git:
+      uri: https://github.com/stefan-bergstein/manuela-visual-inspection.git
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: darknet-gpu:latest
+  runPolicy: Serial
+  triggers:
+  - type: ConfigChange
+  successfulBuildsHistoryLimit: 3
+  postCommit: {}
+  resources: {}
