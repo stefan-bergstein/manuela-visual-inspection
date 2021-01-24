@@ -1,0 +1,7 @@
+# Namespace  with eventing enabled
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: manuela-visual-inspection
+  labels:
+       eventing.knative.dev/injection: enabled

@@ -1,0 +1,12 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaTopic
+metadata:
+  name: visual-inspection-images
+  labels:
+    strimzi.io/cluster: kmanu-vi
+spec:
+  topicName: visual-inspection-images
+  partitions: 1
+  replicas: 1
+  retention.ms: 60000
+  config: {}
