@@ -114,14 +114,22 @@ Check the log of the dashboard knative service
 ```
 oc logs -l serving.knative.dev/service=dashboard -c dashboard -f
 ...
-[2021-01-24 19:18:14,863] INFO in image-processor: 2021-01-24 19:18:14.818647 (350, 350, 3)
-[2021-01-24 19:18:15,110] INFO in image-processor: Predict: Total object detection took 0.24715 seconds
-[2021-01-24 19:18:15,110] INFO in image-processor: ['scratch', 'scratch']
+emitting event "server2ui2" to all [/ui2]
+emitting event "server2ui2" to all [/ui2]
 ...
 
 ```
 
+Get the URL of the dashboard:
+```
+oc get routes.serving.knative.dev dashboard
 
+NAME        URL                                                                                  READY   REASON
+dashboard   http://dashboard-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com   True    
+```
+
+View the dashboard:
+![visual-inspection](images/manu-vi.gif)
 
 
 # Demo flow
