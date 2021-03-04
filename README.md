@@ -5,7 +5,7 @@
 Demo Use cases:
 - Computer vision object detection for spotting anomalies
 - ML model training with GPUs using OpenShift Kubernetes jobs
-- Annotate images with CVAT running on OpenShift Virtualization
+- [Annotate images with CVAT running on OpenShift Virtualization](docs/cvat-cnv.md)
 - Benefits of OpenShift Serverless (knative) for messaging and ML model inferencing
 
 
