@@ -5,7 +5,7 @@
 Demo Use cases:
 - Computer vision object detection for spotting anomalies
 - ML model training with GPUs using OpenShift Kubernetes jobs
-- Annotate images with CVAT running on OpenShift Virtualization
+- [Annotate images with CVAT running on OpenShift Virtualization](docs/cvat-cnv.md)
 - Benefits of OpenShift Serverless (knative) for messaging and ML model inferencing
 
 
@@ -128,8 +128,11 @@ NAME        URL                                                                 
 dashboard   http://dashboard-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com   True    
 ```
 
-View the dashboard:
+**View the dashboard:**
 ![visual-inspection](images/manu-vi.gif)
+
+
+*ATTRIBUTION: Paul Bergmann, Michael Fauser, David Sattlegger, Carsten Steger. [MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) - A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection; in: IEEE Conference on Computer Vision and Pattern Recognition (CVPR), June 2019*
 
 
 # Demo flow
