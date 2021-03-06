@@ -2,10 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - image-processor-bc.yaml
-  - image-processor-is.yaml
+#  - image-processor-bc.yaml
 
-  - image-processor-conf.yaml
   - image-processor-kn-svc.yaml
   - image-processor-trigger.yaml
   - image-processor-kafkasource.yaml

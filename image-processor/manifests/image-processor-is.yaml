@@ -1,9 +1,0 @@
-kind: ImageStream
-apiVersion: v1
-metadata:
-  name: image-processor
-  labels:
-    component: image-processor
-spec:
-  lookupPolicy:
-    local: true
