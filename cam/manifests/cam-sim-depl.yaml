@@ -1,3 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cam-sim-conf
+data:
+  BOOTSTRAP_SERVER: manu-vi-kafka-bootstrap:9092
+#  BOOTSTRAP_SERVER: 	manu-vi-kafka-bootstrap-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com:443
+#  SECURITY_PROTOCOL: SSL
+#  SSL_CAFILE: /mnt/kafka-ca-cert/kafka-ca.crt
+  CAMID: '0'
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
