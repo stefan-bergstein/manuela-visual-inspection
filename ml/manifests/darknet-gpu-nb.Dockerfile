@@ -3,6 +3,8 @@
 FROM image-registry.openshift-image-registry.svc:5000/sbergste-odh-gpu/10.1-cuda-python-36-ubi7:latest
 MAINTAINER Stefan Bergstein stefan.bergstein@gmail.com
 
+USER root
+
 RUN yum install -y git zip && yum clean all
 
 RUN git clone https://github.com/AlexeyAB/darknet.git && cd darknet \
