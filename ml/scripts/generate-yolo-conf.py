@@ -30,12 +30,12 @@ add_color = True
 test_set_size = 0.2
 
 # Source data
-path_mask = '../data/metal_nut/ground_truth/'
-path_test = '../data/metal_nut/test/'
+path_mask = 'data/metal_nut/ground_truth/'
+path_test = 'data/metal_nut/test/'
 
 # Destination paths
-path_data = '../darknet/data/'
-path_yolo = '../darknet/data/metal_yolo/'
+path_data = 'darknet/data/'
+path_yolo = 'darknet/data/metal_yolo/'
 
 Path(path_yolo).mkdir(parents=True, exist_ok=True)
 

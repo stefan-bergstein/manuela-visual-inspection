@@ -17,6 +17,7 @@ The data is released under the Creative Commons Attribution-NonCommercial-ShareA
 
 # Convert Data Set to Darknet Yolo format
 
+The important aspect are the annotations that are locating the anomalies in the images. The mask images from the dataset should be converted into Yolo annotations.
 ## Download the Data Set
 
 Download the Metal Nut Data Set on you computer in `manuela-visual-inspection/ml/data`. 
@@ -42,19 +43,42 @@ metal_nut/train
 The data set contains also mask images which show the location of the anomalies. The script `generate-yolo-conf.py` creates Yolo annotaions files for all images using the mask files and detecting the contours in mask files for `scratch` and `bent` images in `manuela-visual-inspection/ml/darknet/data/metal_yolo`.
 
 
-Switch to `~/manuela-visual-inspection/ml/scripts` and run `generate-yolo-conf.py` 
+Switch to `~/manuela-visual-inspection/ml/` and run `python3 scripts/generate-yolo-conf.py` 
 
 ```
-python generate-yolo-conf.py
+python3 scripts/generate-yolo-conf.py
 ```
+
+Check the annotation file:
 ```
-ls -1 ../darknet/data/metal_yolo/
+ls -1 darknet/data/metal_yolo/
 bent-000.png
 bent-000.txt
 bent-001.png
 bent-001.txt
 ...
 ```
+
+The script generated train.txt and test.txt files, which are needed for the darknet Yolo training because these files define the training and test data.
+
+Inspect these file too. E.g.,
+
+```
+more darknet/data/train.txt 
+darknet/data/metal_yolo/bent-024.png
+darknet/data/metal_yolo/bent-022.png
+darknet/data/metal_yolo/color-021.png
+...
+...
+
+more darknet/data/test.txt 
+darknet/data/metal_yolo/scratch-011.png
+darknet/data/metal_yolo/color-000.png
+darknet/data/metal_yolo/bent-004.png
+...
+```
+
+
 
 
 ## Package the data for training
