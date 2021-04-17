@@ -2,10 +2,10 @@
 
 There are two ways for demonstrating the model training
 
-1) Walk through the Jupyther notebook [Darknet-Model-Training.ipynb)](Darknet-Model-Training.ipynb)
+1) Walk through the Jupyther notebook [Darknet-Model-Training.ipynb](Darknet-Model-Training.ipynb)
    - Deploy an OpenDataHub Operator on OpenShift
    - Create an OpenDataHub instance with a JuypterHub
-   - Upload  and walk through the Jupyther notebook [Darknet-Model-Training.ipynb)](Darknet-Model-Training.ipynb)
+   - Upload  and walk through the Jupyther notebook [Darknet-Model-Training.ipynb](Darknet-Model-Training.ipynb)
 2) Follow the steps in this below
 
 
