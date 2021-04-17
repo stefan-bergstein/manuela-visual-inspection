@@ -1,4 +1,14 @@
 # Model training for the Metal Nut Data Set
+
+There are two ways for demonstrating the model training
+
+1) Walk through the Jupyther notebook [Darknet-Model-Training.ipynb)](Darknet-Model-Training.ipynb)
+   - Deploy an OpenDataHub Operator on OpenShift
+   - Create an OpenDataHub instance with a JuypterHub
+   - Upload  and walk through the Jupyther notebook [Darknet-Model-Training.ipynb)](Darknet-Model-Training.ipynb)
+2) Follow the steps in this below
+
+
 ## Metal Nut Data Set
 - Credits to https://www.mvtec.com/company/research/datasets
 - See also: https://www.mvtec.com/company/research/datasets/mvtec-ad
@@ -43,15 +53,16 @@ metal_nut/train
 The data set contains also mask images which show the location of the anomalies. The script `generate-yolo-conf.py` creates Yolo annotaions files for all images using the mask files and detecting the contours in mask files for `scratch` and `bent` images in `manuela-visual-inspection/ml/darknet/data/metal_yolo`.
 
 
-Switch to `~/manuela-visual-inspection/ml/` and run `python3 scripts/generate-yolo-conf.py` 
+Switch to `~/manuela-visual-inspection/ml/darknet` and run `generate-yolo-conf.py` 
 
 ```
-python3 scripts/generate-yolo-conf.py
+cd ~/manuela-visual-inspection/ml/darknet
+python3 ../scripts/generate-yolo-conf.py
 ```
 
 Check the annotation file:
 ```
-ls -1 darknet/data/metal_yolo/
+ls -1 data/metal_yolo/
 bent-000.png
 bent-000.txt
 bent-001.png
@@ -64,17 +75,17 @@ The script generated train.txt and test.txt files, which are needed for the dark
 Inspect these file too. E.g.,
 
 ```
-more darknet/data/train.txt 
-darknet/data/metal_yolo/bent-024.png
-darknet/data/metal_yolo/bent-022.png
-darknet/data/metal_yolo/color-021.png
+more data/train.txt 
+data/metal_yolo/bent-024.png
+data/metal_yolo/bent-022.png
+data/metal_yolo/color-021.png
 ...
 ...
 
-more darknet/data/test.txt 
-darknet/data/metal_yolo/scratch-011.png
-darknet/data/metal_yolo/color-000.png
-darknet/data/metal_yolo/bent-004.png
+more data/test.txt 
+data/metal_yolo/scratch-011.png
+data/metal_yolo/color-000.png
+data/metal_yolo/bent-004.png
 ...
 ```
 
@@ -83,25 +94,13 @@ darknet/data/metal_yolo/bent-004.png
 
 ## Package the data for training
 
-**Copy darknet config files**
-
-
-Switch to `~/manuela-visual-inspection/ml/yolo-cfg` and copy files 
+**zip images, yolo config and annotations, push to git**
 
 ```
-cd ~/manuela-visual-inspection/ml/yolo-cfg
-cp metal-data.data ../darknet/data/metal-data.data
-cp yolov4-custom-metal-ocp.cfg ../darknet/data/yolov4-custom-metal.cfg
-
-```
-
-**zip images and annotations, push to git**
-
-```
-cd ../darknet/
+cd ~/manuela-visual-inspection/ml/darknet
 zip -r data.zip data
 git add data.zip
-git commit -m "new data.zip"
+git commit -m "updated data.zip"
 git push
 ```
 
@@ -110,7 +109,7 @@ git push
 
 The Yolov4 model training is performed with [Darknet](https://github.com/pjreddie/darknet). Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
 
-For a good Yolov4 introdction with Darknet plwase watch [YOLOv4 in the CLOUD: Install and Run Object Detector](https://www.youtube.com/watch?v=mKAEGSxwOAY)
+For a good Yolov4 introduction with Darknet please watch [YOLOv4 in the CLOUD: Install and Run Object Detector](https://www.youtube.com/watch?v=mKAEGSxwOAY)
 
 Running the training on CPUs or not that powerfull GPUs takes very long. Therefore, let's use a Kubernetes job for the training.
 
