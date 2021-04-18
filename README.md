@@ -10,8 +10,8 @@ The demonstrator contains three major parts:
 
 
 Demo Use cases:
-- [ML model training with GPUs using OpenShift Kubernetes jobs](ml/README.md)
 - [Annotate images with CVAT running on OpenShift Virtualization](docs/cvat-cnv.md)
+- [ML model training with GPUs on OpenShift](ml/README.md)
 - [Computer vision object detection on OpenShift Serverless (knative) for messaging and ML model inferencing](docs/runtime.md)
 
 ![visual-inspection](images/manu-vi.gif)
