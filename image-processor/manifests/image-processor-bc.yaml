@@ -23,7 +23,7 @@ spec:
   source:
     contextDir: image-processor
     git:
-      uri: https://github.com/stefan-bergstein/manuela-visual-inspection.git
+      uri: https://github.com/sa-mw-dach/manuela-visual-inspection.git
     type: Git
   output:
     to:

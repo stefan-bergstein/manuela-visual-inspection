@@ -254,5 +254,5 @@ tar -C darknet/data/metal_yolo/ -rvf data/release/tf-model.tar classes.txt
 ```
 
 Create a release on GitHub with the `tf-model.tar` file so that is can be used in the image-processor for predictions.
-E.g. https://github.com/stefan-bergstein/manuela-visual-inspection/releases/download/v0.1-alpha-tf/tf-model.tar
+E.g. https://github.com/sa-mw-dach/manuela-visual-inspection/releases/download/v0.1-alpha-tf/tf-model.tar
 
