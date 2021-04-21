@@ -40,6 +40,10 @@ oc project manuela-visual-inspection
 
 ### Create a kafka cluster and topic
 
+Deploy the Red Hat Integration AMQ Streams operator first via the OpertorHub.
+
+Then create a kafka cluster and topic:
+
 ```
 oc apply -f manifests/kafka-cluster.yaml
 ```
