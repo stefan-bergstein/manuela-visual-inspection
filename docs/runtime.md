@@ -150,7 +150,7 @@ The images-processor does not need to deal with any kafka details. It just recei
 ![Broker-Trigger](https://knative.dev/docs/eventing/images/broker-trigger-overview.svg)
 
 
-The images-processor python sippet show that is is agnoctoc to Kafka or any other event source:
+The images-processor python snippet shows that it is agnostic to Kafka or any other event source:
 
 ```python
 @app.route('/', methods=['POST'])
