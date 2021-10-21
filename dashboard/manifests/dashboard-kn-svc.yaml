@@ -4,7 +4,6 @@ metadata:
   labels:
     app: visual-inspection
     component: dashboard
-    app: visual-inspection
     app.kubernetes.io/part-of: visual-inspection
   name: dashboard
 spec:
