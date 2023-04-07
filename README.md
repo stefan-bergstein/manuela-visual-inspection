@@ -1,6 +1,10 @@
 ![MANUela Logo](https://github.com/sa-mw-dach/manuela/raw/master/docs/images/logo.png)
 # [Manuela](https://github.com/sa-mw-dach/manuela) Showcase: Visual Inspection on OpenShift
 
+
+
+**>> This is a branch with the 'old' darknet ML approach <<** 
+
 This project is a sibling of the MANUela IoT Edge demo project. It shows an exemplary solution blueprint for computer vision visual inspection in manufacturing. 
 
 The demonstrator contains 2x3 parts. The ML infrastructure sections covers use cases of MLOps and DevOps engineers.
@@ -16,8 +20,6 @@ Data and ML engineers would focus on the ML application tasks.
 1. [Image labeling with the Computer Vision Annotation Tool.](docs/cvat-cnv.md#image-labeling-with-the-computer-vision-annotation-tool)
 1. [Training of a computer vision AI model for detecting anomalies in images (Darknet YOLOv4).](ml/README.md)
 1. [Real-time manufacturing defect detection with TensorFlow based inferencing.](docs/runtime.md#demo-execution)
-
-
 
 
 
