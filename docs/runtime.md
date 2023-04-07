@@ -40,10 +40,27 @@ oc project manuela-visual-inspection
 
 ### Create a kafka cluster and topic
 
+Deploy the Red Hat Integration AMQ Streams operator first via the OpertorHub.
+
+Then create a kafka cluster and topic:
+
 ```
 oc apply -f manifests/kafka-cluster.yaml
 ```
-Wait until the cluster is up and running.
+Wait until the cluster is up and running. E.g.:
+```
+oc get pods
+NAME                                                   READY   STATUS    RESTARTS   AGE
+amq-streams-cluster-operator-v1.7.0-67b4df466f-skc8r   1/1     Running   0          17m
+manu-vi-entity-operator-84fbfbcc84-x5dnt               2/3     Running   0          97s
+manu-vi-kafka-0                                        1/1     Running   0          2m12s
+manu-vi-kafka-1                                        1/1     Running   0          2m12s
+manu-vi-kafka-2                                        1/1     Running   0          2m12s
+manu-vi-zookeeper-0                                    1/1     Running   0          3m14s
+manu-vi-zookeeper-1                                    1/1     Running   0          3m14s
+manu-vi-zookeeper-2                                    1/1     Running   0          3m14s
+
+```
 
 Create a topic for the images:
 
@@ -146,7 +163,7 @@ The images-processor does not need to deal with any kafka details. It just recei
 ![Broker-Trigger](https://knative.dev/docs/eventing/images/broker-trigger-overview.svg)
 
 
-The images-processor python sippet show that is is agnoctoc to Kafka or any other event source:
+The images-processor python snippet shows that it is agnostic to Kafka or any other event source:
 
 ```python
 @app.route('/', methods=['POST'])

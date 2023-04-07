@@ -8,7 +8,7 @@ This document describes how to deploy and demonstrate [CVAT](https://github.com/
   - [Install CentOS Steams VM](#install-centos-steams-vm)
   - [Install CVAT](#install-cvat)
   - [Add User in CVAT](#add-user-in-cvat)
-- [Demo Execution](#demo-execution)
+- [Image labeling with the Computer Vision Annotation Tool](#image-labeling-with-the-computer-vision-annotation-tool)
   - [Show Docker application running in OpenShift Virtualization VM](#show-docker-application-running-in-openshift-virtualization-vm)
   - [Demo the annotation workflow for the visual inspecting showcase](#demo-the-annotation-workflow-for-the-visual-inspecting-showcase)
 - [Demo Clean-up](#demo-clean-up)
@@ -227,7 +227,7 @@ For further details see the [CVAT Users Guide](https://github.com/openvinotoolki
 
 
 
-## Demo Execution
+## Image labeling with the Computer Vision Annotation Tool
 
 The demo has multiple parts and you can pick and choose depending on you audience.
 

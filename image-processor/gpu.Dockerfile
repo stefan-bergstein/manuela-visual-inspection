@@ -4,7 +4,7 @@ RUN mkdir /app
 
 WORKDIR /app
 
-RUN curl -LO https://github.com/stefan-bergstein/manuela-visual-inspection/releases/download/v0.1-alpha-tf/tf-model.tar \
+RUN curl -LO https://github.com/sa-mw-dach/manuela-visual-inspection/releases/download/v0.1-alpha-tf/tf-model.tar \
     && tar xvf tf-model.tar --no-same-owner && rm -f tf-model.tar
 
 COPY ./ /app/

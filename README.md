@@ -3,16 +3,23 @@
 
 This project is a sibling of the MANUela IoT Edge demo project. It shows an exemplary solution blueprint for computer vision visual inspection in manufacturing. 
 
-The demonstrator contains three major parts:
-1. Image labeling with the Computer Vision Annotation Tool.
-2. Training of a YOLOv4 model for detecting anomalies.
-3. Runtime simulation with TensorFlow based serverless inferencing.
+The demonstrator contains 2x3 parts. The ML infrastructure sections covers use cases of MLOps and DevOps engineers.
+Data and ML engineers would focus on the ML application tasks.
 
 
-Demo Use cases:
-- [Annotate images with CVAT running on OpenShift Virtualization](docs/cvat-cnv.md)
-- [ML model training with GPUs on OpenShift](ml/README.md)
-- [Computer vision object detection on OpenShift Serverless (knative) for messaging and ML model inferencing](docs/runtime.md)
+## ML Infrastructure
+1. [Deploy and manage the Computer Vision Annotation Tool (CVAT) on OpenShift Virtualization.](docs/cvat-cnv.md#install-cvat-in-a-openshift-virtualization-virtual-machine)
+1. [Jupyter notebook as a Service with OpenDateHub. Model training in K8S jobs.](ml/README.md)
+1. [Serverless (knative) images processing on OpenShift.](docs/runtime.md#installation)
+
+## ML Application
+1. [Image labeling with the Computer Vision Annotation Tool.](docs/cvat-cnv.md#image-labeling-with-the-computer-vision-annotation-tool)
+1. [Training of a computer vision AI model for detecting anomalies in images (Darknet YOLOv4).](ml/README.md)
+1. [Real-time manufacturing defect detection with TensorFlow based inferencing.](docs/runtime.md#demo-execution)
+
+
+
+
 
 ![visual-inspection](images/manu-vi.gif)
 
