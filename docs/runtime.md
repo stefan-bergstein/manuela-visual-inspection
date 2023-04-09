@@ -31,7 +31,6 @@ This installation section describes only the configuration of kafka and building
 
 ### Create namespaces
 
-** Still needed ??**
 Create the namespace/project via the OpenShift UI or CLI.
 
 ```
@@ -292,8 +291,6 @@ emitting event "server2ui2" to all [/ui2]
 
 
 **View the dashboard:**
-
-[Add notes]
 
 ![visual-inspection](../images/manu-vi.gif)
 
