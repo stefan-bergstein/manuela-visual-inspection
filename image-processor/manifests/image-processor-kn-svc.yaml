@@ -15,15 +15,33 @@ metadata:
   labels:
     app: visual-inspection
     app.kubernetes.io/part-of: visual-inspection
+    app.openshift.io/runtime: python
 spec:
   template:
     metadata:
+      annotations:
+        autoscaling.knative.dev/target: '100'
+        autoscaling.knative.dev/targetUtilizationPercentage: '70'
+        autoscaling.knative.dev/window: 60s
+      labels:
+        app.kubernetes.io/component: image-processor
+        app.kubernetes.io/instance: image-processor
+        app.kubernetes.io/part-of: strimzi-manu-vi
+        app.openshift.io/runtime: python
+        app.openshift.io/runtime-namespace: manuela-visual-inspection
+        app.openshift.io/runtime-version: latest
     spec:
+      containerConcurrency: 0
       containers:
         - name: image-processor
-          # Looks like serving.knative.dev does not work with image streams
           image: image-registry.openshift-image-registry.svc:5000/manuela-visual-inspection/image-processor:latest
           imagePullPolicy: Always
           envFrom:
           - configMapRef:
               name: image-processor-conf
+          resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100

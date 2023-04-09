@@ -31,11 +31,11 @@ This installation section describes only the configuration of kafka and building
 
 ### Create namespaces
 
-Create the namespace/project via CLI because the yaml contains the required `eventing.knative.dev/injection: enabled` label.
+** Still needed ??**
+Create the namespace/project via the OpenShift UI or CLI.
 
 ```
-oc apply -f manifests/namespace.yaml
-oc project manuela-visual-inspection
+oc new-project manuela-visual-inspection
 ```
 
 ### Create a kafka cluster and topic
@@ -160,7 +160,7 @@ After the initial startup, the service is scaled back to zero because the servic
 
 The images-processor does not need to deal with any kafka details. It just receives [Cloud-Events](https://cloudevents.io/) via a [broker and trigger](https://knative.dev/docs/eventing/#event-brokers-and-triggers).
 
-![Broker-Trigger](https://knative.dev/docs/eventing/images/broker-trigger-overview.svg)
+![Broker-Trigger](https://knative.dev/docs/images/home-images/knative_flowchart_graphic.svg)
 
 
 The images-processor python snippet shows that it is agnostic to Kafka or any other event source:
@@ -191,7 +191,7 @@ image-processor   http://image-processor-manuela-visual-inspection.apps.ocp5.sto
 ```
 
 
-Let's define a [Kafka-Source](../image-processor/manifests/image-processor-kafkasource.yaml) and set the sink to the default broker:
+Let's define a default broker and a [Kafka-Source](../image-processor/manifests/image-processor-kafkasource.yaml) and set the sink to the default broker:
 ```
 oc apply -f image-processor/manifests/image-processor-kafkasource.yaml
 ```

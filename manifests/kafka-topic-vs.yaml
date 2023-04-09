@@ -1,12 +1,13 @@
-apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
+apiVersion: kafka.strimzi.io/v1beta2
 metadata:
   name: visual-inspection-images
   labels:
     strimzi.io/cluster: manu-vi
+  namespace: manuela-visual-inspection
 spec:
-  topicName: visual-inspection-images
-  partitions: 1
-  replicas: 1
-  retention.ms: 60000
-  config: {}
+  partitions: 5
+  replicas: 2
+  config:
+    retention.ms: 60000
+    segment.bytes: 1073741824

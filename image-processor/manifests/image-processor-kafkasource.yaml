@@ -1,7 +1,19 @@
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+  name: default
+  namespace: manuela-visual-inspection
+  labels:
+    app.kubernetes.io/part-of: visual-inspection
+spec: {}
+---
 apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
 metadata:
   name: image-processor-kafka-source
+  labels:
+    app: visual-inspection
+    app.kubernetes.io/part-of: visual-inspection
 spec:
   bootstrapServers:
     - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9091
