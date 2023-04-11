@@ -33,6 +33,7 @@ send_kafka = False
 producer = None
 topic = None
 cam_id = 0
+fps = 1
 
 #
 # Sending message via REST Web Services Cloud Event
@@ -280,6 +281,9 @@ if __name__ == "__main__":
     # ID number for the simulated camera
     cam_id = int(os.getenv("CAMID", default=args.camid))
 
+
+    fps = int(os.getenv("FPS", default=args.fps))
+
     #
     # Connect to target either to web socket or kafka
     #
@@ -308,5 +312,5 @@ if __name__ == "__main__":
     # Start the work ...
     #
      
-    read_imagefiles(args.path, args.fps, args.scale)
+    read_imagefiles(args.path, fps, args.scale)
 

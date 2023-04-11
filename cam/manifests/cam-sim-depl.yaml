@@ -7,6 +7,7 @@ data:
 #  BOOTSTRAP_SERVER: 	manu-vi-kafka-bootstrap-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com:443
 #  SECURITY_PROTOCOL: SSL
 #  SSL_CAFILE: /mnt/kafka-ca-cert/kafka-ca.crt
+  FPS: '0.1'
   CAMID: '0'
 ---
 apiVersion: apps/v1
