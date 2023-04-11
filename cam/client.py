@@ -33,7 +33,7 @@ send_kafka = False
 producer = None
 topic = None
 cam_id = 0
-fps = 1
+fps = 1.0
 
 #
 # Sending message via REST Web Services Cloud Event
