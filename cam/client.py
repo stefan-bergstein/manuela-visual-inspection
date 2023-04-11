@@ -282,7 +282,7 @@ if __name__ == "__main__":
     cam_id = int(os.getenv("CAMID", default=args.camid))
 
 
-    fps = int(os.getenv("FPS", default=args.fps))
+    fps = float(os.getenv("FPS", default=args.fps))
 
     #
     # Connect to target either to web socket or kafka
