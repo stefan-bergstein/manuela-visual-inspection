@@ -18,7 +18,7 @@ metadata:
 spec:
   strategy:
     dockerStrategy:
-      dockerfilePath: gpu.Dockerfile
+      dockerfilePath: Dockerfile
     type: Docker
   source:
     contextDir: image-processor

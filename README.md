@@ -14,8 +14,8 @@ Data and ML engineers would focus on the ML application tasks.
 
 ## ML Application
 1. [Image labeling with the Computer Vision Annotation Tool.](docs/cvat-cnv.md#image-labeling-with-the-computer-vision-annotation-tool)
-1. [Training of a computer vision AI model for detecting anomalies in images (Darknet YOLOv4).](ml/README.md)
-1. [Real-time manufacturing defect detection with TensorFlow based inferencing.](docs/runtime.md#demo-execution)
+1. [Training of a computer vision AI model for detecting anomalies in images with PyTorch YOLOv5).](ml/README.md)
+1. [Real-time manufacturing defect detection with Model Mesh based inferencing.](docs/runtime.md#demo-execution)
 
 
 

@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: image-processor-conf
 data:
-  YOLO_CLASS_FILE: classes.txt
-  CE_ACTION_TYPE: "manuela.image-processor.action"
-  CE_ACTION_SOURCE: "manuela/eventing/image-processor"
-  KN_BROKER_URL: "http://broker-ingress.knative-eventing.svc.cluster.local/sbergste-knative/default"
+  INFER_URL: "https://manuela-vi-onnx-ods-project-stefan.apps.ocp5.stormshift.coe.muc.redhat.com/v2/models/manuela-vi-onnx/infer"
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service

@@ -13,14 +13,9 @@ import json
 import base64
 import numpy as np
 
-# Predict using Tensorflow
-from tensorflowyolo import TensorflowYolo
+from remote_infer_rest import ort_v5
 
-
-my_tf = None
-ce_action_type = None
-ce_action_source = None
-kn_broker_url = None
+infer_url = None
 
 def convert_b64jpeg_to_image(b64jpeg):
 
@@ -72,53 +67,42 @@ def process_image():
             cam_id = data['id']
 
 
-        # Call TF Yolo for object (damage) detection
+        # Call Model Mesh for object (damage) detection
 
+        # Define classes file
+        classes_file = 'data.yaml'
+
+        #  Set Confidence threshold, between 0 and 1 (detections with less score won't be retained)
+        conf = 0.2
+
+        #  Intersection over Union Threshold, between 0 and 1 (cleanup overlapping boxes)
+        iou = 0.4
+
+        # Inferencing
         start = time.time()
-        detected_classes, image_pred = my_tf.predict(frame)
+
+        infer=ort_v5(frame, infer_url, conf, iou, 640, classes_file)
+        img, out, result = infer()
+
         end = time.time()
         app.logger.info('Predict: Total object detection took {:.5f} seconds'.format(end - start))
 
-        if detected_classes:
-
-            app.logger.info(detected_classes)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                           
+        # check if something was detected
+        if list(out.shape)[0] > 0:
             status = 1
-
-            # Create a CloudEvent
-            # - The CloudEvent "id" is generated if omitted. "specversion" defaults to "1.0".
-            try:
-                attributes = {
-                    'type': ce_action_type,
-                    'source': ce_action_source,
-                }
-                event_data = {
-                    'uuid': str(uuid.uuid4()),  # TO-DO: Please with event uuid
-                    'failure': detected_classes,
-                    'status': status,
-                    'time': data['time']
-                }
-                event = CloudEvent(attributes, event_data)
-
-                # Creates the HTTP request representation of the CloudEvent in structured content mode
-                headers, body = to_structured(event)
-
-                # POST
-                requests.post(kn_broker_url, data=body, headers=headers)
-
-            except:
-                app.logger.error(f'Failed to send CloudEvent to: {kn_broker_url}')
-
         else:
             status = 0
 
         text = data['time']
 
-        # Respond with another event (optional)
+        # Respond with another event 
         response = make_response({
             'text': text,
             'id': cam_id,
             'status': status,
-            'image': convert_image_to_jpeg(image_pred),
+            'image': convert_image_to_jpeg(img),
         })
         response.headers["Ce-Id"] = str(uuid.uuid4())
         response.headers["Ce-specversion"] = "1.0"
@@ -135,13 +119,8 @@ def process_image():
 if __name__ == '__main__':
 
     app.logger.setLevel(logging.DEBUG)
-    app.logger.info("Configure TF based Yolo neural network ...")
-    tfmodel_path = os.getenv("TF_MODEL_PATH", default="./tf-model")
+    app.logger.info("Start image processor ...")
 
-    ce_action_type = os.getenv("CE_ACTION_TYPE", default="manuela.image-processor.action")
-    ce_action_source = os.getenv("CE_ACTION_SOURCE", default="manuela/eventing/image-processor")
-    kn_broker_url = os.getenv("KN_BROKER_URL", default="http://broker-ingress.knative-eventing.svc.cluster.local/sbergste-knative/default")
-
-    my_tf = TensorflowYolo(tfmodel_path=tfmodel_path)
+    infer_url = os.getenv("INFER_URL", default="https://manuela-vi-onnx-ods-project-stefan.apps.ocp5.stormshift.coe.muc.redhat.com/v2/models/manuela-vi-onnx/infer")
 
     app.run(debug=False, host='0.0.0.0', port=8080)
