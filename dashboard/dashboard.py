@@ -77,8 +77,10 @@ def process_event():
     sio.emit('server2ui2', data, namespace='/ui2')
 
 
-    response = make_response({})
-    return response
+    # response = make_response({})
+    # return response
+    return 'OK', 200
+
 
 if __name__ == '__main__':
 
