@@ -1,0 +1,18 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: aws-connection-manuela-onnx
+#  namespace: manuela-vi-rhods
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
+  annotations:
+    opendatahub.io/connection-type: s3
+    openshift.io/display-name: manuela-onnx
+data:
+  AWS_ACCESS_KEY_ID: QkR2UGhDbE0zc0pjRnJoQ2dlWGQ=
+  AWS_DEFAULT_REGION: dXMtZWFzdC0x
+  AWS_S3_BUCKET: bWFudWVsYQ==
+  AWS_S3_ENDPOINT: aHR0cDovL3MzLm9wZW5zaGlmdC1zdG9yYWdlLnN2Yy5jbHVzdGVyLmxvY2FsOjgw
+  AWS_SECRET_ACCESS_KEY: azlrdmIzY2JJb0t6bFVOWGJRMCtNamxlZzFOZ2xvK2lKcDBZbWZXZg==
+type: Opaque

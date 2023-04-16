@@ -1,0 +1,21 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: manuela-vi-onnx
+#  namespace: manuela-vi-rhods
+  annotations:
+    openshift.io/display-name: manuela-vi-onnx
+    serving.kserve.io/deploymentMode: ModelMesh
+  labels:
+    name: manuela-vi-onnx
+    opendatahub.io/dashboard: "true"
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: onnx
+        version: "1"
+      runtime: model-server-manuela-vi
+      storage:
+        key: aws-connection-manuela-onnx
+        path: manu-vi-best-yolov5m.onnx
