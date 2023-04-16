@@ -88,11 +88,15 @@ def test_func():
     print("Returned cloud event:")
     print(response.json())
     print("response.status_code: ", response.status_code)
+    print(response.headers['Ce-Type'])
 
-    if response.status_code == 200:  
+
+    if response.status_code == 200 and response.headers['Ce-Type'] == "manuela.image-processor.response":
         frame = convert_b64jpeg_to_image(data['image'].split(',')[1])
         cv2.imwrite("out.jpeg", frame)
         print("prediction image saved: out.jpeg")
+    else:
+        print("something went wrong :-(")
 
 if __name__ == "__main__":
   test_func()

@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import logging
 
@@ -82,37 +83,57 @@ def process_image():
         start = time.time()
 
         infer=ort_v5(frame, infer_url, conf, iou, 640, classes_file)
-        img, out, result = infer()
+        try:
+            img, out, result = infer()
+            end = time.time()
 
-        end = time.time()
-        app.logger.info('Predict: Total object detection took {:.5f} seconds'.format(end - start))
+            app.logger.info('Predict: Total object detection took {:.5f} seconds'.format(end - start))
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                           
-        # check if something was detected
-        if list(out.shape)[0] > 0:
-            status = 1
-        else:
-            status = 0
+            # check if something was detected
+            if list(out.shape)[0] > 0:
+                status = 1
+            else:
+                status = 0
 
-        text = data['time']
+            text = data['time']
 
-        # Respond with another event 
-        response = make_response({
-            'text': text,
-            'id': cam_id,
-            'status': status,
-            'image': convert_image_to_jpeg(img),
-        })
-        response.headers["Ce-Id"] = str(uuid.uuid4())
-        response.headers["Ce-specversion"] = "1.0"
-        response.headers["Ce-Source"] = "manuela/eventing/image-processor"
-        response.headers["Ce-Type"] = "manuela.image-processor.response"
+            # Respond with another event 
+            response = make_response({
+                'text': text,
+                'id': cam_id,
+                'status': status,
+                'image': convert_image_to_jpeg(img),
+            })
+            response.headers["Ce-Id"] = str(uuid.uuid4())
+            response.headers["Ce-specversion"] = "1.0"
+            response.headers["Ce-Source"] = "manuela/eventing/image-processor"
+            response.headers["Ce-Type"] = "manuela.image-processor.response"
+            
+
+
+        except BaseException as error:
+            app.logger.error("inferecing failed!")
+            app.logger.error("An exception occurred: {}".format(error)) 
+         
+         
+            response = make_response({
+                'msg': 'inferecing failed'
+            })
+            response.headers["Ce-Id"] = str(uuid.uuid4())
+            response.headers["Ce-specversion"] = "1.0"
+            response.headers["Ce-Source"] = "manuela/eventing/image-processor"
+            response.headers["Ce-Type"] = "manuela.image-processor.error"
+
     else:
         app.logger.warning("Payload not valid.")
         response = make_response({
             'msg': 'Payload not valid'
         })
+        response.headers["Ce-Id"] = str(uuid.uuid4())
+        response.headers["Ce-specversion"] = "1.0"
+        response.headers["Ce-Source"] = "manuela/eventing/image-processor"
+        response.headers["Ce-Type"] = "manuela.image-processor.error"       
     return response
 
 
