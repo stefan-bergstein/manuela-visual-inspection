@@ -17,9 +17,10 @@ spec:
   template:
     metadata:
       annotations:
-        autoscaling.knative.dev/target: '100'
-        autoscaling.knative.dev/targetUtilizationPercentage: '70'
-        autoscaling.knative.dev/window: 60s
+        autoscaling.knative.dev/minScale: "1"
+        # autoscaling.knative.dev/target: '100'
+        # autoscaling.knative.dev/targetUtilizationPercentage: '70'
+        # autoscaling.knative.dev/window: 60s
       labels:
         app.kubernetes.io/component: image-processor
         app.kubernetes.io/instance: image-processor
@@ -31,14 +32,16 @@ spec:
       containerConcurrency: 0
       containers:
         - name: image-processor
-          image: image-registry.openshift-image-registry.svc:5000/manuela-visual-inspection/image-processor:latest
+          image: image-registry.openshift-image-registry.svc:5000/manuela-visual-inspection/image-processor:cpu
           imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
           envFrom:
           - configMapRef:
               name: image-processor-conf
           resources: {}
       enableServiceLinks: false
-      timeoutSeconds: 300
+      timeoutSeconds: 30
   traffic:
     - latestRevision: true
       percent: 100
