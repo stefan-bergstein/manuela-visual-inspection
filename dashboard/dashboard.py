@@ -2,7 +2,7 @@ import logging
 from flask import Flask, request, make_response, render_template
 from flask_socketio import SocketIO
 import json
-
+import uuid
 
 app = Flask(__name__)
 sio = SocketIO(app, logger=True, engineio_logger=False)
@@ -70,16 +70,25 @@ def disconnect_ui2():
 
 @app.route('/', methods=['POST'])
 def process_event():
-    app.logger.debug(request.headers)
-    app.logger.debug(request.data.decode("utf-8"))
+    # app.logger.debug(request.headers)
+    # app.logger.debug(request.data.decode("utf-8"))
+    
     data = json.loads(request.data.decode("utf-8"))
+    app.logger.debug(data.text)
 
     sio.emit('server2ui2', data, namespace='/ui2')
 
+    response = make_response({
+        "msg": "Image sent to dashoard"
+    })
 
-    # response = make_response({})
-    # return response
-    return 'OK', 200
+    response.headers["Ce-Id"] = str(uuid.uuid4())
+    response.headers["Ce-specversion"] = "1.0"
+    response.headers["Ce-Source"] = "manuela/eventing/dashboard"
+    response.headers["Ce-Type"] = "manuela.dashboard.response"
+
+    return response
+
 
 
 if __name__ == '__main__':
