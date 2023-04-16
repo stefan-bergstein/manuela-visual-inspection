@@ -74,7 +74,6 @@ def process_event():
     # app.logger.debug(request.data.decode("utf-8"))
     
     data = json.loads(request.data.decode("utf-8"))
-    app.logger.debug(data.text)
 
     sio.emit('server2ui2', data, namespace='/ui2')
 
