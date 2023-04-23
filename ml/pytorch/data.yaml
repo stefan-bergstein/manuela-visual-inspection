@@ -1,0 +1,6 @@
+train: data/manuela/data/metal-nut-data/train/images
+val: data/manuela/data/metal-nut-data/valid/images
+nc: 2
+names:
+  0: scratch
+  1: bent
