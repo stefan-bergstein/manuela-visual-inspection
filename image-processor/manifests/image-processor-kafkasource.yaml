@@ -11,6 +11,7 @@ apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
 metadata:
   name: image-processor-kafka-source
+  namespace: manuela-visual-inspection
   labels:
     app: visual-inspection
     app.kubernetes.io/part-of: visual-inspection
