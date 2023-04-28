@@ -24,46 +24,11 @@ This document describes how to deploy and demonstrate [CVAT](https://github.com/
 
 ### Install CentOS Steams VM
 
-**Download CentOS-Stream qcow2** 
-E.g.,
-
-```sh
-curl -o https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20201217.0.x86_64.qcow2
-```
-
-**Create a PVC with the CentOS-Stream image**
-```sh
-oc project manuela-visual-inspection
-
-virtctl image-upload dv centos8-stream  --size=10Gi --image-path=CentOS-Stream-GenericCloud-8-20201217.0.x86_64.qcow2 --access-mode ReadWriteMany --storage-class managed-nfs-storage
-```
-
-**Demonstrate the VM creation**
-In the OpenShift Console go into the `manuela-visual-inspection` project and navigate to `Workloads -> Virtualization`.
-- Select `Create Virtual Machine` -> `New with Wirzard`
+In the OpenShift Console go into the `manuela-visual-inspection` project and navigate to `Virtualization` -> `VirtualMachines`.
+- Select `Create` -> `From catalog` -> `CentOS Stream 8 VM` -> `Customize VirtualMachine`
 - Enter General data:
   - Name: cvat
-  - Operating System: RHEL 8.0 or higher
-  - Uncheck 'Clone available operating system source'
-  - Boot Source: Existing PCV
-  - Flavor: Large
-  - Profile: server
-  
-![Create VM General](../images/create-vm-gen.png)
-
-- Next: Network Interfaces. Keep default nic. Next.
-- Storage:
-  - Press `Add Disk`: 
-  - Source: Use existing PVC
-  - Persistent Volume Claim: centos8-stream
-  - `Add`
-![Create VM Disk](../images/create-vm-disk.png)
-  - Select new `disk-0` as `Boot Source`
-  - Next
-- Advanced: Cloud-init
-  - Overwrite user and password
-  - user: centos
-  - password: redhat
+  - Optional parameter `CLOUD_USER_PASSWORD`: `redhat`
 - Review and Create Virtual Machine
 - Start Virtual Machine
 - Check the Console and login
@@ -128,10 +93,27 @@ Test Docker
 # sudo dnf install git -y
 # git clone https://github.com/opencv/cvat
 # cd cvat
+# git checkout tags/v1.4.0
+# vim docker-compose.yml
+```
+Add the proper image tags to the CVAT containers:
+```
+...
+cvat:
+  container_name: cvat
+  image: openvino/cvat_server:v1.4.0
+...
+cvat_ui:
+  container_name: cvat_ui
+  image: openvino/cvat_ui:v1.4.0
+...
+```
+Then spin up the containers:
+```
 # docker-compose up -d
 ```
 
-**Crerate superuser**
+**Create superuser**
 
 I.e. django / password
 ```
