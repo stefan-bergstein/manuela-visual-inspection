@@ -21,6 +21,8 @@ This section describes the installation of the runtime on OpenShift. The model t
 
 
 ## Prerequisites
+- S3 compatible object storage such as OpenShift Data Foundation.
+- Red Hat OpenShift Data Science.
 - Red Hat OpenShift Serverless Operator is installed (knative)
 - Red Hat Integration - AMQ Streams Operator is installed (kafka)
 - This repo is cloned into your home directory
@@ -66,6 +68,16 @@ Create a topic for the images:
 ```
 oc apply -f manifests/kafka-topic-vs.yaml 
 ```
+
+### Set up Serverless
+
+Instantiate `KnativeServing` and `KnativeEventing` through the OpenShift Serverless operator.
+
+Instantiate `KnativeKafka` and ensure the following properties are set in its specifications:
+* `spec.broker.enabled`: `true`
+* `spec.channel.enabled`: `true`
+* `spec.sink.enabled`: `true`
+* `spec.source.enabled`: `true`
 
 ### Build the Camera simulator
 
@@ -240,7 +252,7 @@ oc get routes.serving.knative.dev dashboard
 NAME        URL                                                                                  READY   REASON
 dashboard   http://dashboard-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com   True    
 ```
-
+NOTE: Ensure you're requesting the dashboard through HTTP and not HTTPS.
 
 Click on the Dashboard URL and navigate to `Automated Visual Inspection`:
 
