@@ -32,7 +32,7 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 ```
 
 - Minio is deployed to the project/namespace `minio`.
-- Launch the minio web UI (see Route) and create a bucket (e.g. manu-vi).
+- Launch the minio web UI (see Route) and create a bucket (e.g. `manu-vi`).
 
 ## Model training
 
@@ -95,11 +95,11 @@ In you have to not had the time or resources to train the model by yourself, you
   - Models and model servers ->  **`Configure server`**
   - Number of model server replicas to deploy: `1`
   - Model server size: `Small`
-  - Model route: -> `Check/Enable` "Make deployed models available through an external route"
-  - Token authorization ->  `Uncheck/Disable` "Require token authentication"
+  - Model route: -> `Check/Enable` *'Make deployed models available through an external route'*
+  - Token authorization ->  `Uncheck/Disable` *'Require token authentication'*
   - -> **`Configure`**
 
-- Deploy a model -> **`Deploy Model`**
+- Deploy the trained model -> **`Deploy Model`**
   - Model Name: `manu-vi`
   - Model framework: `onnx - 1`
   - Model location: `Existing data connection`

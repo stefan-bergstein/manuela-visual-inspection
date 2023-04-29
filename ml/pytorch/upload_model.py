@@ -52,7 +52,7 @@ def _do_upload(s3_client, src_file, target_object_name):
 
 
 if __name__ == '__main__':
-    upload_model(model_object_name)
+    upload_model('manu-vi-best.onnx', 'manu-vi-best.onnx')
     
     
     
