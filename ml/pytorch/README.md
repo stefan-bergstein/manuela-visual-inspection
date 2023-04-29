@@ -1,11 +1,11 @@
-# Extentd share memory for your notebook 
+# Extend share memory for your notebook 
 See also [YOLOv5 Transfer Learning on RHODS](https://github.com/rh-aiservices-bu/yolov5-transfer-learning#environment-and-prerequisites)
 
-PyTorch is internally using shared memory (`/dev/shm`) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a specific volume with enough space at this emplacement.
 
+PyTorch is internally using shared memory (`/dev/shm`) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a emptyDir volume or to run the model training without PyTorch workers (which will slowdown the training).
 
 ## Shut down your workbench.
-First, shut down your workbench in the RH-ODS Data Science Project before patching the Notebook manifest
+First, shut down your workbench in the RH-ODS Data Science Project before patching the Notebook manifest.
 
 
 ## Find your notebook
@@ -21,7 +21,7 @@ NAME      AGE
 manu-vi   6m4s
 ```
 
-## Extend the defaut shared memory
+## Extend the default shared memory
 
 Patch the notebook with a `emptyDir` volume for `/dev/shm`. 
 

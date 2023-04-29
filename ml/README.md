@@ -1,263 +1,121 @@
-
-
-
-# *Outdated* - *Outdated* - *Outdated* - *Outdated* - *Outdated*
-
 # Model training for the Metal Nut Data Set
+Automating Visual Inspections with AI on [Red Hat OpenShift Data Science](https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-data-science) - Hands-on tutorial
 
-There are two ways for demonstrating the model training
+## Prerequisites
 
-1) Walk through the Jupyther notebook [Darknet-Model-Training.ipynb](Darknet-Model-Training.ipynb)
-   - Deploy an OpenDataHub Operator on OpenShift
-   - Create an OpenDataHub instance with a JuypterHub
-   - Upload  and walk through the Jupyther notebook [Darknet-Model-Training.ipynb](Darknet-Model-Training.ipynb)
-2) Follow the steps in this below
+### OpenShift with GPU worker nodes 
+GPU worker node are not mandatory, but recommended when you would like to train the model by yourself.
 
+- Redhatters can order the ["NVIDIA GPU Operator Red Hat OpenShift Container Platform 4 Workshop"](https://demo.redhat.com/catalog?search=Nvidia). Please be aware of the costs and shutdown the service.
 
-## Metal Nut Data Set
-- Credits to https://www.mvtec.com/company/research/datasets
-- See also: https://www.mvtec.com/company/research/datasets/mvtec-ad
+- Upgrade OpenShift to 4.11.x
 
-### ATTRIBUTION
-Paul Bergmann, Michael Fauser, David Sattlegger, Carsten Steger. MVTec AD - A Comprehensive Real-World Dataset for Unsupervised Anomaly Detection; in: IEEE Conference on Computer Vision and Pattern Recognition (CVPR), June 2019
+- Install the [Node Feature Discovery (NFD) Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/install-nfd.html#installing-the-node-feature-discovery-nfd-operator).
 
-### LICENSE
-The data is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0). For using the data in a way that falls under the commercial use clause of the license, please contact us via the form below.
+- Install the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/install-gpu-ocp.html#installing-the-nvidia-gpu-operator).
 
-# Prerequisites
+- Create the [ClusterPolicy instance](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/install-gpu-ocp.html#create-the-clusterpolicy-instance).
 
-- Clone this repo into you home directory
-- OpenShift Cluster with a GPU
+- Verify the [successful installation of the NVIDIA GPU Operator](
+https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/install-gpu-ocp.html#verify-the-successful-installation-of-the-nvidia-gpu-operator).
+
+### Deploy the RHODS Operator
+Follow ["Installing OpenShift Data Science on OpenShift Container Platform"]
+(https://access.redhat.com/documentation/en-us/red_hat_openshift_data_science_self-managed/1.22/html-single/installing_openshift_data_science_self-managed/index#installing-openshift-data-science-on-openshift-container-platform_install)
 
 
-# Convert Data Set to Darknet Yolo format
+### Provide S3 Storage
+Model Serving requires a S3 bucket with an ACCESS_KEY and SECRET_KEY. In case you don't have S3 already available (e.g. ODF or on AWS) you can deploy Minio on your OpenShift Cluster:
 
-The important aspect are the annotations that are locating the anomalies in the images. The mask images from the dataset should be converted into Yolo annotations.
-## Download the Data Set
-
-Download the Metal Nut Data Set on you computer in `manuela-visual-inspection/ml/data`. 
-
-```
-cd ~/manuela-visual-inspection/ml/data
-
-curl -u guest:GU.205dldo ftp://ftp.softronics.ch/mvtec_anomaly_detection/metal_nut.tar.xz -o metal_nut.tar.xz
-
-tar xf metal_nut.tar.xz && rm -f metal_nut.tar.xz
-
-ls -1d metal_nut/*
-metal_nut/ground_truth
-metal_nut/license.txt
-metal_nut/readme.txt
-metal_nut/test
-metal_nut/train
+```         
+oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/minio/minio.yaml
 ```
 
-
-## Create Yolo annotations files 
-
-The data set contains also mask images which show the location of the anomalies. The script `generate-yolo-conf.py` creates Yolo annotaions files for all images using the mask files and detecting the contours in mask files for `scratch` and `bent` images in `manuela-visual-inspection/ml/darknet/data/metal_yolo`.
-
-
-Switch to `~/manuela-visual-inspection/ml/darknet` and run `generate-yolo-conf.py` 
-
-```
-cd ~/manuela-visual-inspection/ml/darknet
-python3 ../scripts/generate-yolo-conf.py
-```
-
-Check the annotation file:
-```
-ls -1 data/metal_yolo/
-bent-000.png
-bent-000.txt
-bent-001.png
-bent-001.txt
-...
-```
-
-The script generated train.txt and test.txt files, which are needed for the darknet Yolo training because these files define the training and test data.
-
-Inspect these file too. E.g.,
-
-```
-more data/train.txt 
-data/metal_yolo/bent-024.png
-data/metal_yolo/bent-022.png
-data/metal_yolo/color-021.png
-...
-...
-
-more data/test.txt 
-data/metal_yolo/scratch-011.png
-data/metal_yolo/color-000.png
-data/metal_yolo/bent-004.png
-...
-```
-
-
-
-
-## Package the data for training
-
-**zip images, yolo config and annotations, push to git**
-
-```
-cd ~/manuela-visual-inspection/ml/darknet
-zip -r data.zip data
-git add data.zip
-git commit -m "updated data.zip"
-git push
-```
-
-
-# Yolo Model training on OpenShift using Darknet
-
-The Yolov4 model training is performed with [Darknet](https://github.com/pjreddie/darknet). Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
-
-For a good Yolov4 introduction with Darknet please watch [YOLOv4 in the CLOUD: Install and Run Object Detector](https://www.youtube.com/watch?v=mKAEGSxwOAY)
-
-Running the training on CPUs or not that powerfull GPUs takes very long. Therefore, let's use a Kubernetes job for the training.
-
-
-## Build Darknet image (GPU)
-
-First create a GPU enabled darknet images:
-
-```
-cd ~/manuela-visual-inspection/ml
-oc project manuela-visual-inspection
-
-oc apply -f manifests/darknet-gpu-is.yaml
-oc apply -f manifests/darknet-gpu-bc.yaml
-```
-
-Watch the build logs:
-```
-oc logs bc/darknet-gpu
-...
-Successfully pushed image-registry.openshift-image-registry.svc:5000/manuela-visual-inspection/darknet-gpu@sha256:084350af727e3922ae1ee2ce3c44203715495d8b8a935a6e479146c33d7ce376
-Push successful
-```
-
-
-## Run Training
-
-```
-oc apply -f manifests/darknet-gpu-pvc.yaml
-oc apply -f manifests/darknet-metal-gpu-job.yaml
-```
-
-Note, trained weights are stored on a persistance volume `darknet-gpu-volume`, but you need to copy/save it to your computer manually.
-
-## Save the trained model on you local computer
-
-
-```
-oc apply -f manifests/darknet-metal-depl.yaml
-
-oc get pods
-NAME                             READY   STATUS             RESTARTS   AGE
-darknet-metal-777f88b5d8-wlnfb   1/1     Running            0          3d5h
-
-oc cp darknet-metal-777f88b5d8-wlnfb:/mnt/darknet/backup ~/manuela-visual-inspection/ml/data/weights
-
-
-```
-
-## Optionally, Check Model Mean Average Precision (mAP) manually
-
-Find out the mAP of your model after the training. Run the following command on any of the saved weights from the training to see the mAP value for that specific weight's file. 
-Note, you have to install darknet on your computer first.
-
-```
-cd darknet
-```
-
-**1000.weights**:
-```
-darknet detector map data/metal_data_ocp.data data/yolov4-custom-metal.cfg ../data/weights/yolov4-custom-metal_1000.weights
-
-class_id = 0, name = scratch, ap = 100.00%       (TP = 1, FP = 3) 
-class_id = 1, name = bent, ap = 88.33%           (TP = 6, FP = 3) 
-
- for conf_thresh = 0.25, precision = 0.54, recall = 1.00, F1-score = 0.70 
- for conf_thresh = 0.25, TP = 7, FP = 6, FN = 0, average IoU = 36.56 % 
-
- IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
- mean average precision (mAP@0.50) = 0.941667, or 94.17 % 
-```
-
-
-**2000.weights**:
-```
-darknet detector map data/metal_data_ocp.data data/yolov4-custom-metal.cfg ../data/weights/yolov4-custom-metal_2000.weights
-
-class_id = 0, name = scratch, ap = 100.00%       (TP = 1, FP = 3) 
-class_id = 1, name = bent, ap = 100.00%          (TP = 6, FP = 0) 
-
- for conf_thresh = 0.25, precision = 0.70, recall = 1.00, F1-score = 0.82 
- for conf_thresh = 0.25, TP = 7, FP = 3, FN = 0, average IoU = 56.24 % 
-
- IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
- mean average precision (mAP@0.50) = 1.000000, or 100.00 % 
-```
-
-**final.weights**:
-```
-darknet detector map data/metal_data_ocp.data data/yolov4-custom-metal.cfg ../data/weights/yolov4-custom-metal_final.weights
-
-class_id = 0, name = scratch, ap = 100.00%       (TP = 1, FP = 1) 
-class_id = 1, name = bent, ap = 100.00%          (TP = 6, FP = 0) 
-
- for conf_thresh = 0.25, precision = 0.88, recall = 1.00, F1-score = 0.93 
- for conf_thresh = 0.25, TP = 7, FP = 1, FN = 0, average IoU = 71.37 % 
-
- IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
- mean average precision (mAP@0.50) = 1.000000, or 100.00 % 
- ```
-
-
- ## Optionally, package model in tar file
-
-This step is optionlay because we will content to and use a Tensorflow model
-
-```
-tar -C data/weights/ -cvf data/release/model.tar yolov4-custom-metal_final.weights
-tar -C yolo-cfg/ -rvf data/release/model.tar yolov4-custom-metal-test.cfg
-tar -C darknet/data/metal_yolo/ -rvf data/release/model.tar classes.txt
-
-tar tvf data/release/model.tar
-```
-
-Optionally, create release on GitHub
-
-
-
-# Convert Darknet Yolo to Tensorflow
-
-## Convert model
-
-```
-cd ~
-git clone https://github.com/theAIGuysCode/tensorflow-yolov4-tflite.git
-cd tensorflow-yolov4-tflite
-
-```
-
-```
-python save_model.py --weights ~/manuela-visual-inspection/ml/data/weights/yolov4-custom-metal_final.weights --output ~/manuela-visual-inspection/ml/data/tf-model --input_size 416 --model yolov4
-
-```
-
-
-## Package TF model in tar file
-
-```
-cd ml
-tar -C data/ -cvf data/release/tf-model.tar tf-model/
-tar -C darknet/data/metal_yolo/ -rvf data/release/tf-model.tar classes.txt
-```
-
-Create a release on GitHub with the `tf-model.tar` file so that is can be used in the image-processor for predictions.
-E.g. https://github.com/sa-mw-dach/manuela-visual-inspection/releases/download/v0.1-alpha-tf/tf-model.tar
+- Minio is deployed to the project/namespace `minio`.
+- Launch the minio web UI (see Route) and create a bucket (e.g. manu-vi).
+
+## Model training
+
+### Create new RHODS workbench for Ultralytics Pytorch Yolov5
+
+- Launch RHODS via the application launcher (nine-dots) -> **`Red Hat OpenShift Data Science`**
+- [Create a new Data Science project](../images/create-data-science-workbench-gpu-cuda.png) -> **`Create data science project`**.
+
+  If you have your own OpenShift cluster, you can name the project 'manuela-visual-inspection'. If not add your initials. E.g. 'manu-vi-stb'.
+  Don't choose to long names, because project and model server names are internally concatenated, which could lead into problems.
+
+  - Name: `manu-vi`
+  - Resource name: `manu-vi`
+  - -> **`Create`**.
+
+- Create a data connection with your S3 configuration
+  - Data connections -> **`Add Data connections`**.
+  - Name: `manu-vi`
+  - AWS_ACCESS_KEY_ID: `minio`
+  - AWS_SECRET_ACCESS_KEY: `minio123`
+  - AWS_S3_ENDPOINT: `http://minio-service.minio.svc.cluster.local:9000`
+  - AWS_S3_BUCKET: `manu-vi`
+
+- Create new RHODS workbench
+  - Workbenches -> **`Create workbench`**.
+  - Name: `manu-vi`
+  - Image: `CUDA` (assuming you have a cluster with a Nvidia GPU)
+  - Deployment size: `Medium` 
+  - Cluster storage: `Create new cluster storage`
+  - Data connection: `Use existing data connection` -> `manu-vi`
+  - -> **`Create workbench`**.
+
+- Extend share memory for your notebook
+
+  PyTorch is internally using shared memory (/dev/shm) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a emptyDir volume or to run the model training without PyTorch workers (which will slowdown the training).
+
+  - Patch the Notebook as described here: [README.md](https://github.com/stefan-bergstein/manuela-visual-inspection/blob/main/ml/pytorch/README)
+  - Stop and start your workbench in your Data Science Project
+
+- Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git
+
+### Explore and run the model training notebook
+- Navigate to `manuela-visual-inspection/ml/pytorch` and open  `Manuela_Visual_Inspection_Yolov5_Model_Training.ipynb`
+- Explore or explain and run cells step by step
+  - Setup and test the Ultralytics Yolov5 toolkit
+  - Inspect training dataset (image and labels)  
+  - Model training and validation
+  - Convert model to onnx format and upload it to S3
+
+## Model Serving
+
+### Optionally, download a pre-trained manu-vi model and upload it to S3
+In you have to not had the time or resources to train the model by yourself, you can download a pre-trained manu-vi model and upload it to your S3 bucket.
+- Open your workbench (with your manu-vi data connection)
+- Navigate to `manuela-visual-inspection/ml/pytorch` and open `Upload_pretrained_model.ipynb`
+- Run the notebook to upload the model
+
+### Configure RHODS model serving
+- Create model server in your data science project
+  - Models and model servers ->  **`Configure server`**
+  - Number of model server replicas to deploy: `1`
+  - Model server size: `Small`
+  - Model route: -> `Check/Enable` "Make deployed models available through an external route"
+  - Token authorization ->  `Uncheck/Disable` "Require token authentication"
+  - -> **`Configure`**
+
+- Deploy a model -> **`Deploy Model`**
+  - Model Name: `manu-vi`
+  - Model framework: `onnx - 1`
+  - Model location: `Existing data connection`
+  - Name: `manu-vi`
+  - Folder path:  `manu-vi-best.onnx`
+  - -> **`Deploy`**
+
+- Wait until Status is green / loaded
+  - Copy and save the inference URL
+
+## Test interfering with a REST API call
+Show how an ML REST call could be integrated into your 'intelligent' Python application.
+
+- Return to the workbench
+- Navigate to `manuela-visual-inspection/ml/pytorch` and open  `Manuela_Visual_Inspection_Yolov5_Infer_Rest.ipynb` 
+- Study or explain and run cells step by step
+  - Please don´t forget to update the inferencing URL 
+- Demonstrate cool inferencing with RHODS :-)   
 

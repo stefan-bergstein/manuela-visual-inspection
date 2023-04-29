@@ -9,7 +9,7 @@ Data and ML engineers would focus on the ML application tasks.
 
 ## ML Infrastructure
 1. [Deploy and manage the Computer Vision Annotation Tool (CVAT) on OpenShift Virtualization.](docs/cvat-cnv.md#install-cvat-in-a-openshift-virtualization-virtual-machine)
-1. [Jupyter notebook as a Service with OpenDateHub. Model training in K8S jobs.](ml/README.md)
+1. [Jupyter notebook as a Service with OpenShift Data Science. ](ml/README.md)
 1. [Serverless (knative) images processing on OpenShift.](docs/runtime.md#installation)
 
 ## ML Application

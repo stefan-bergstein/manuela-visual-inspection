@@ -3,20 +3,22 @@ import os
 from boto3 import client
 
 
-model_object_name = os.environ.get('MODEL_OBJECT_NAME', 'manu-vi-best.onnx')
 s3_endpoint_url = os.environ.get('AWS_S3_ENDPOINT')
 s3_access_key = os.environ.get('AWS_ACCESS_KEY_ID')
 s3_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 s3_bucket_name = os.environ.get('AWS_S3_BUCKET')
 
 
-def upload_model(model_object_name=model_object_name):
+def upload_model(src_file, target_object_name):
+    print(f'src_file: "{src_file}"')
+    print(f'target_object_name: "{target_object_name}"')      
+          
     s3_client = _initialize_s3_client(
         s3_endpoint_url=s3_endpoint_url,
         s3_access_key=s3_access_key,
         s3_secret_key=s3_secret_key
     )
-    _do_upload(s3_client, model_object_name)
+    _do_upload(s3_client, src_file, target_object_name)
 
 
 def _initialize_s3_client(s3_endpoint_url, s3_access_key, s3_secret_key):
@@ -29,15 +31,28 @@ def _initialize_s3_client(s3_endpoint_url, s3_access_key, s3_secret_key):
     return s3_client
 
 
-def _do_upload(s3_client, object_name):
-    print(f'uploading model to {object_name}')
+def _do_upload(s3_client, src_file, target_object_name):
+    print(f'uploading model to bucket {s3_bucket_name} as {target_object_name}')
+    
     try:
-        s3_client.upload_file(model_object_name, s3_bucket_name, object_name)
+        result = s3_client.list_objects_v2(Bucket=s3_bucket_name)
+    except:
+      print(f'Bucket does not exist. Creating bucket {s3_bucket_name}')
+      s3_client.create_bucket(Bucket=s3_bucket_name)
+
+    
+    
+    
+    try:
+        s3_client.upload_file(src_file, s3_bucket_name, target_object_name)
     except:
         print(f'S3 upload to bucket {s3_bucket_name} at {s3_endpoint_url} failed!')
         raise
-    print(f'model uploaded and available as "{object_name}"')
+    print(f'model uploaded and available as "{target_object_name}"')
 
 
 if __name__ == '__main__':
     upload_model(model_object_name)
+    
+    
+    
