@@ -29,6 +29,8 @@ This section describes the installation of the runtime on OpenShift. The model t
 - Configured and tested RHODS model server with the visual inspection ML model
 
   The Visual Inspection Runtime requires the deployed ML model. Please ensure that model is deployed, by following the steps in [Model Serving](../ml/README.md#model-serving).
+  Or, in case you prefer shortcuts, you can try the [CLI based setup of RHDOS for Manu-vi model serving](../ml/manifests/README.md)
+
 
 ## Installation
 This installation section describes only the configuration of kafka and building the container images. The installation is finalized as part of the [Demo Execution](#demo-execution) in the following section.

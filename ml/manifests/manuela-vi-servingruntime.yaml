@@ -1,13 +1,13 @@
 apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
 metadata:
-  name: model-server-manuela-vi
-#  namespace: manuela-vi-rhods
+  name: manu-vi
+  namespace: manuela-visual-inspection
   annotations:
     enable-route: "true"
   generation: 1
   labels:
-    name: model-server-ods-project-stefan
+    name: model-server-manuela-visual-inspection
     opendatahub.io/dashboard: "true"
 spec:
   builtInAdapter:
