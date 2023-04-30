@@ -17,9 +17,7 @@ metadata:
     app.kubernetes.io/part-of: visual-inspection
 spec:
   bootstrapServers:
-    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9091
-    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9092
-    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc.cluster.local:9093
+    - manu-vi-kafka-bootstrap.manuela-visual-inspection.svc:9092
   consumerGroup: image-processor-kafka-source
   sink:
     ref:

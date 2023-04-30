@@ -22,14 +22,22 @@ This section describes the installation of the runtime on OpenShift. The model t
 
 ## Prerequisites
 - S3 compatible object storage such as OpenShift Data Foundation.
-- Red Hat OpenShift Data Science.
+- Red Hat OpenShift Data Science (RHODS).
 - Red Hat OpenShift Serverless Operator is installed (knative)
 - Red Hat Integration - AMQ Streams Operator is installed (kafka)
 - This repo is cloned into your home directory
+- Configured and tested RHODS model server with the visual inspection ML model
+
+  The Visual Inspection Runtime requires the deployed ML model. Please ensure that model is deployed, by following the steps in [Model Serving](../ml/README.md#model-serving).
 
 ## Installation
-This installation section describes only the configuration of kafka and building the container images. The installation is finalized as part of the demo in the following section.
+This installation section describes only the configuration of kafka and building the container images. The installation is finalized as part of the [Demo Execution](#demo-execution) in the following section.
 
+If not already done, please clone this repository:
+```
+git clone https://github.com/stefan-bergstein/manuela-visual-inspection.git
+cd manuela-visual-inspection
+```
 
 ### Create namespaces
 
@@ -41,7 +49,7 @@ oc new-project manuela-visual-inspection
 
 ### Create a kafka cluster and topic
 
-Deploy the Red Hat Integration AMQ Streams operator first via the OpertorHub.
+Deploy the Red Hat Integration AMQ Streams operator first via the OperatorHub.
 
 Then create a kafka cluster and topic:
 
@@ -74,10 +82,8 @@ oc apply -f manifests/kafka-topic-vs.yaml
 Instantiate `KnativeServing` and `KnativeEventing` through the OpenShift Serverless operator.
 
 Instantiate `KnativeKafka` and ensure the following properties are set in its specifications:
-* `spec.broker.enabled`: `true`
-* `spec.channel.enabled`: `true`
-* `spec.sink.enabled`: `true`
 * `spec.source.enabled`: `true`
+
 
 ### Build the Camera simulator
 
@@ -150,6 +156,13 @@ During the demo we are going to finalize the installation and explain each compo
 
 The images-processor is implemented as knative service. It processes the submitted images and detects anomalies.
 
+First, edit `image-processor/manifests/image-processor-kn-svc.yaml` and update the inference endpoint:
+```
+...
+data:
+  INFER_URL: "https://<model-name>-<my-ods-project>.apps.<my-ocp-cluster>/v2/models/manu-vi/infer"
+...
+```
 
 Deploy the knative service:
 
@@ -220,10 +233,6 @@ oc apply -f image-processor/manifests/image-processor-trigger.yaml
 The broker is now connected to the image-processor knative service:
 ![Trigger](../images/trigger.png)
 
-The Service is stilled scaled to zero.
-
-
-
 
 
 ### Deploy the dashboard
@@ -252,7 +261,7 @@ oc get routes.serving.knative.dev dashboard
 NAME        URL                                                                                  READY   REASON
 dashboard   http://dashboard-manuela-visual-inspection.apps.ocp5.stormshift.coe.muc.redhat.com   True    
 ```
-NOTE: Ensure you're requesting the dashboard through HTTP and not HTTPS.
+NOTE: Depending on your TLS configuration, ensure you're requesting the dashboard through HTTP and not HTTPS.
 
 Click on the Dashboard URL and navigate to `Automated Visual Inspection`:
 
@@ -280,12 +289,21 @@ client.py (INFO): Imagae 37: {'label': 'scratch', 'path': 'data/metal_nut/scratc
 ...
 ```
 
+
 **image-processor is scaling**
 
 The image-processor is receiving cloud events and i is starting.
 Note, be patient. It takes some time to start the image-processor pod because it needs to initialize TensorFlow and load the model.
 
 ![Scale to one](../images/scale-to-one.png)
+
+
+Check the logs of the image-processor:
+```
+oc logs -l serving.knative.dev/service=image-processor -c image-processor -f
+```
+Expected output 
+
 
 
 Once it is started you can see  the log of the dashboard knative service
@@ -334,4 +352,76 @@ The `image-processor` receives cloud event that includes a images, calls the Ten
 oc delete -f cam/manifests/cam-sim-depl.yaml
 oc delete -k dashboard/manifests/
 oc delete -k image-processor/manifests/
+```
+
+
+# Troubleshooting hints
+
+## Kafka
+
+Find Kafka Bootstrap server:
+```
+oc describe Kafka manu-vi -n manuela-visual-inspection
+```
+
+Expected example output:
+```
+...
+    Bootstrap Servers:  manu-vi-kafka-bootstrap.manuela-visual-inspection.svc:9092
+    Name:               plain
+    Type:               plain
+...
+```
+Double check that the bootstrap server is defined in the kafka-source:
+```
+oc describe KafkaSource image-processor-kafka-source
+```
+Expected example output:
+```
+...
+Spec:
+  Bootstrap Servers:
+    manu-vi-kafka-bootstrap.manuela-visual-inspection.svc:9092
+ ...   
+```
+
+
+Check Topic:
+```
+oc exec manu-vi-kafka-0 -c kafka -n manuela-visual-inspection -- bin/kafka-topics.sh --list --bootstrap-server manu-vi-kafka-bootstrap.manuela-visual-inspection.svc:9092
+```
+
+Expected example output:
+```
+__consumer_offsets
+__strimzi-topic-operator-kstreams-topic-store-changelog
+__strimzi_store_topic
+visual-inspection-images
+```
+
+
+Check that messages are arriving:
+```
+oc exec manu-vi-kafka-0 -c kafka -n manuela-visual-inspection -- bin/kafka-console-consumer.sh --topic visual-inspection-images --bootstrap-server manu-vi-kafka-bootstrap.manuela-visual-inspection.svc:9092
+```
+
+Expected example output:
+```
+{"image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA ... pQhH/9k=", "id": 0, "type": "image", "time": "2023-04-30 10:49:15.506975", "text": "2023-04-30 10:49:15.506975", "label": "good"}
+```
+
+
+Verify that the Kafka event source was created by entering the following command:
+```
+oc get pods -n knative-eventing | grep -i kafka-source
+```
+
+Expected example output:
+```
+kafka-source-dispatcher-0                             2/2     Running     0          3m55s
+```
+
+Check kafka-source logs for errors:
+```
+oc logs kafka-source-dispatcher-0 -c kafka-source-dispatcher -n knative-eventing
 ```

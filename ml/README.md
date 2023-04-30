@@ -20,8 +20,7 @@ GPU worker node are not mandatory, but recommended when you would like to train 
 https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/openshift/install-gpu-ocp.html#verify-the-successful-installation-of-the-nvidia-gpu-operator).
 
 ### Deploy the RHODS Operator
-Follow ["Installing OpenShift Data Science on OpenShift Container Platform"]
-(https://access.redhat.com/documentation/en-us/red_hat_openshift_data_science_self-managed/1.22/html-single/installing_openshift_data_science_self-managed/index#installing-openshift-data-science-on-openshift-container-platform_install)
+Follow ["Installing OpenShift Data Science on OpenShift Container Platform"](https://access.redhat.com/documentation/en-us/red_hat_openshift_data_science_self-managed/1.22/html-single/installing_openshift_data_science_self-managed/index#installing-openshift-data-science-on-openshift-container-platform_install)
 
 
 ### Provide S3 Storage
@@ -34,7 +33,8 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 - Minio is deployed to the project/namespace `minio`.
 - Launch the minio web UI (see Route) and create a bucket (e.g. `manu-vi`).
 
-## Model training
+
+## Setup a RHODS workbench
 
 ### Create new RHODS workbench for Ultralytics Pytorch Yolov5
 
@@ -65,14 +65,16 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
   - Data connection: `Use existing data connection` -> `manu-vi`
   - -> **`Create workbench`**.
 
-- Extend share memory for your notebook
+- Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git
+
+## Model training
+
+### Optionally, Extend share memory for your notebook
 
   PyTorch is internally using shared memory (/dev/shm) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a emptyDir volume or to run the model training without PyTorch workers (which will slowdown the training).
 
   - Patch the Notebook as described here: [README.md](https://github.com/stefan-bergstein/manuela-visual-inspection/blob/main/ml/pytorch/README)
   - Stop and start your workbench in your Data Science Project
-
-- Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git
 
 ### Explore and run the model training notebook
 - Navigate to `manuela-visual-inspection/ml/pytorch` and open  `Manuela_Visual_Inspection_Yolov5_Model_Training.ipynb`
@@ -85,7 +87,7 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 ## Model Serving
 
 ### Optionally, download a pre-trained manu-vi model and upload it to S3
-In you have to not had the time or resources to train the model by yourself, you can download a pre-trained manu-vi model and upload it to your S3 bucket.
+In case you have to not had the time or resources to train the model by yourself, you can download a pre-trained manu-vi model and upload it to your S3 bucket.
 - Open your workbench (with your manu-vi data connection)
 - Navigate to `manuela-visual-inspection/ml/pytorch` and open `Upload_pretrained_model.ipynb`
 - Run the notebook to upload the model
