@@ -112,7 +112,7 @@ In case you have to not had the time or resources to train the model by yourself
 - Wait until Status is green / loaded
   - Copy and save the inference URL
 
-## Test interfering with a REST API call
+## Test inferencing with a REST API call
 Show how an ML REST call could be integrated into your 'intelligent' Python application.
 
 - Return to the workbench
