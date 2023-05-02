@@ -73,7 +73,7 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 
   PyTorch is internally using shared memory (/dev/shm) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a emptyDir volume or to run the model training without PyTorch workers (which will slowdown the training).
 
-  - Patch the Notebook as described here: [README.md](https://github.com/stefan-bergstein/manuela-visual-inspection/blob/main/ml/pytorch/README)
+  - Patch the Notebook as described here: [README.md](pytorch/README.md)
   - Stop and start your workbench in your Data Science Project
 
 ### Explore and run the model training notebook
