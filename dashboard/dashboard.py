@@ -3,9 +3,13 @@ from flask import Flask, request, make_response, render_template
 from flask_socketio import SocketIO
 import json
 import uuid
+import os
+
+
+io_logger=False
 
 app = Flask(__name__)
-sio = SocketIO(app, logger=True, engineio_logger=False)
+sio = SocketIO(app, logger=True, engineio_logger=io_logger)
 
 #
 # HTML Pages
@@ -91,6 +95,9 @@ def process_event():
 
 
 if __name__ == '__main__':
+    
+    io_logger = bool(os.getenv("IOLOGGER", default="FALSE").lower() == 'true')
+    print('IOLOGGER: {}'.format(io_logger))
 
     app.logger.setLevel(logging.DEBUG)
     sio.run(app=app, host='0.0.0.0', port=8080)
