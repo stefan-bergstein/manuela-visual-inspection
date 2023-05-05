@@ -38,6 +38,7 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 
 ### Create new RHODS workbench for Ultralytics Pytorch Yolov5
 
+- Log in to the OpenShift web console
 - Launch RHODS via the application launcher (nine-dots) -> **`Red Hat OpenShift Data Science`**
 - [Create a new Data Science project](../images/create-data-science-workbench-gpu-cuda.png) -> **`Create data science project`**.
 
@@ -54,27 +55,31 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
   - AWS_ACCESS_KEY_ID: `minio`
   - AWS_SECRET_ACCESS_KEY: `minio123`
   - AWS_S3_ENDPOINT: `http://minio-service.minio.svc.cluster.local:9000`
+  - AWS_DEFAULT_REGION: does not matter, is ignored
   - AWS_S3_BUCKET: `manu-vi`
 
 - Create new RHODS workbench
   - Workbenches -> **`Create workbench`**.
   - Name: `manu-vi`
   - Image: `CUDA` (assuming you have a cluster with a Nvidia GPU)
-  - Deployment size: `Medium` 
+  - Deployment size: `Small`
+  - Number of GPUs: 1  
   - Cluster storage: `Create new cluster storage`
   - Data connection: `Use existing data connection` -> `manu-vi`
   - -> **`Create workbench`**.
 
-- Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git
+- Find the created project in the OpenShift console, navigate to Administration -> LimitRanges and delete the LimitRange that was auto created
+
+- Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git (there are at least 4 ways to do this - find out the approach you like)
 
 ## Model training
 
-### Optionally, Extend share memory for your notebook
+### Optionally, Extend shared memory for your notebook
 
   PyTorch is internally using shared memory (/dev/shm) to exchange data between its internal worker processes. However, default container engine configurations limit this memory to the bare minimum, which can make the process exhaust this memory and crash. The solution is to manually increase this memory by mounting a emptyDir volume or to run the model training without PyTorch workers (which will slowdown the training).
 
-  - Patch the Notebook as described here: [README.md](pytorch/README.md)
-  - Stop and start your workbench in your Data Science Project
+  - Patch the Notebook as described here: [README.md](pytorch/README.md) You might have to adapt the namespace/name to match your setup.
+  - If the workbench is not automatically restarted, stop and start your workbench in your Data Science Project.
 
 ### Explore and run the model training notebook
 - Navigate to `manuela-visual-inspection/ml/pytorch` and open  `Manuela_Visual_Inspection_Yolov5_Model_Training.ipynb`
@@ -83,6 +88,8 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
   - Inspect training dataset (image and labels)  
   - Model training and validation
   - Convert model to onnx format and upload it to S3
+
+Note: the notebook's cells contain output messsages from a previous successful run. This is so you could explain the demo without actually run anything (i.e. no GPUs required, etc...). But in order to run the demo yourself, you need to run every cell successfully _once_, even if the outputs might suggest is has already run.
 
 ## Model Serving
 
