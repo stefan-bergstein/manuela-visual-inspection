@@ -68,7 +68,7 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
   - Data connection: `Use existing data connection` -> `manu-vi`
   - -> **`Create workbench`**.
 
-- Find the created project in the OpenShift console, navigate to Administration -> LimitRanges and delete the LimitRange that was auto created
+- Note, in case the workbench does not start, please check if LimitRanges block the pod.  Find the created project in the OpenShift console, navigate to Administration -> LimitRanges and delete the LimitRange that was auto created
 
 - Open the workbench and clone https://github.com/stefan-bergstein/manuela-visual-inspection.git (there are at least 4 ways to do this - find out the approach you like)
 
@@ -86,10 +86,12 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 - Explore or explain and run cells step by step
   - Setup and test the Ultralytics Yolov5 toolkit
   - Inspect training dataset (image and labels)  
-  - Model training and validation
+  - Model training
+    - *Model training can take ~30 minutes or more even with GPUs. You could jump to [Model Serving](#model-serving), use a pre-trained model and come back later.* 
+  - Model validation
   - Convert model to onnx format and upload it to S3
 
-Note: the notebook's cells contain output messsages from a previous successful run. This is so you could explain the demo without actually run anything (i.e. no GPUs required, etc...). But in order to run the demo yourself, you need to run every cell successfully _once_, even if the outputs might suggest is has already run.
+Note: the notebook's cells contain output messages from a previous successful run. This is so you could explain the demo without actually run anything (i.e. no GPUs required, etc...). But in order to run the demo yourself, you need to run every cell successfully _once_, even if the outputs might suggest is has already run.
 
 ## Model Serving
 
