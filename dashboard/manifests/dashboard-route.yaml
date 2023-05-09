@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: dashboard-svc
+  namespace: manuela-visual-inspection
+  labels:
+    app: visual-inspection
+    app.kubernetes.io/part-of: visual-inspection
+    component: dashboard
+spec:
+  to:
+    kind: Service
+    name: dashboard-svc
+    weight: 100
+  port:
+    targetPort: 8088
+  wildcardPolicy: None

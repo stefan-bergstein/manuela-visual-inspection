@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-svc
+  namespace: manuela-visual-inspection
+  labels:
+    app: visual-inspection
+    component: dashboard
+    app.kubernetes.io/part-of: visual-inspection
+spec:
+  selector:
+    app: dashboard
+  ports:
+    - name: cloudevents
+      protocol: TCP
+      port: 8088
+      targetPort: 8088
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  labels:
+    app: visual-inspection
+    component: dashboard
+    app.kubernetes.io/part-of: visual-inspection
+spec:
+  selector:
+    matchLabels:
+      app: dashboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: dashboard:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8088
+      restartPolicy: Always

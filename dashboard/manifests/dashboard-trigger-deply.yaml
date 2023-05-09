@@ -1,0 +1,15 @@
+# Knative Eventing Trigger to trigger the dashboard service
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: dashboard-svc
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: manuela.image-processor.response
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: dashboard-svc
