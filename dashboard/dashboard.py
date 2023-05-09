@@ -9,8 +9,8 @@ import os
 io_logger=False
 
 app = Flask(__name__)
-app.config['APPLICATION_ROOT'] = '/api'
-sio = SocketIO(app, logger=True, engineio_logger=io_logger)
+
+sio = SocketIO(app, logger=True,path='/api', engineio_logger=io_logger)
 
 #
 # HTML Pages
