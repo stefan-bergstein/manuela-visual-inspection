@@ -100,5 +100,5 @@ if __name__ == '__main__':
     print('IOLOGGER: {}'.format(io_logger))
 
     app.logger.setLevel(logging.DEBUG)
-    sio.run(app=app, host='0.0.0.0', port=8080)
+    sio.run(app=app, host='0.0.0.0', port=8088)
 
