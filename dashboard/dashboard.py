@@ -10,7 +10,7 @@ io_logger=False
 
 app = Flask(__name__)
 
-sio = SocketIO(app, logger=True,path='/api', engineio_logger=io_logger)
+sio = SocketIO(app, logger=True, cors_allowed_origins=['http://manuela-visual-inspection-ui.apps.ocp5.stormshift.coe.muc.redhat.com'], engineio_logger=io_logger)
 
 #
 # HTML Pages
