@@ -28,7 +28,7 @@ Patch the notebook with a `emptyDir` volume for `/dev/shm`.
 If needed, replace the notebook and namespace name with your values.
 
 ```
-oc patch   Notebook manu-vi -n manuela-visual-inspection  --type=json --patch '
+oc patch Notebook manu-vi -n manuela-visual-inspection  --type=json --patch '
 [
   { 
     "op": "add",
@@ -55,4 +55,11 @@ oc patch   Notebook manu-vi -n manuela-visual-inspection  --type=json --patch '
   }
 ]'
 ```
+or,
+```
+oc patch Notebook manu-vi -n manuela-visual-inspection  --type=json -f https://raw.githubusercontent.com/stefan-bergstein/manuela-visual-inspection/main/ml/pytorch/patch-notebook-shm.json
+
+```
+
+
 In case of trouble, try the manual procedure described in  [YOLOv5 Transfer Learning on RHODS](https://github.com/rh-aiservices-bu/yolov5-transfer-learning#environment-and-prerequisites).
