@@ -38,7 +38,6 @@ oc patch Notebook manu-vi -n manuela-visual-inspection  --type=json --patch '
             "name": "dshm",
             "mountPath": "/dev/shm"
         }
-     
   },
   { 
     "op": "add",
@@ -49,17 +48,8 @@ oc patch Notebook manu-vi -n manuela-visual-inspection  --type=json --patch '
                 "medium": "Memory"
             }
         }
-
-
-     
   }
 ]'
 ```
-or,
-```
-oc patch Notebook manu-vi -n manuela-visual-inspection  --type=json -f https://raw.githubusercontent.com/stefan-bergstein/manuela-visual-inspection/main/ml/pytorch/patch-notebook-shm.json
-
-```
-
 
 In case of trouble, try the manual procedure described in  [YOLOv5 Transfer Learning on RHODS](https://github.com/rh-aiservices-bu/yolov5-transfer-learning#environment-and-prerequisites).
