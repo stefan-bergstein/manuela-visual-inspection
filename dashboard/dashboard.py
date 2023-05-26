@@ -7,10 +7,11 @@ import os
 
 
 io_logger=False
+cors_allowed_origins='*'
 
 app = Flask(__name__)
 
-sio = SocketIO(app, logger=True, cors_allowed_origins=['http://manuela-visual-inspection-ui.apps.ocp5.stormshift.coe.muc.redhat.com'], engineio_logger=io_logger)
+sio = SocketIO(app, logger=True, cors_allowed_origins=[cors_allowed_origins], engineio_logger=io_logger)
 
 #
 # HTML Pages
@@ -80,6 +81,14 @@ def process_event():
     
     data = json.loads(request.data.decode("utf-8"))
 
+    # Serializing json
+    json_object = json.dumps(data, indent=4)
+    
+    # Writing to sample.json
+    epoch_time = int(time.time())
+    with open(f"sample-{epoch_time}.json", "w") as outfile:
+        outfile.write(json_object)
+
     sio.emit('server2ui2', data, namespace='/ui2')
 
     response = make_response({
@@ -94,11 +103,13 @@ def process_event():
     return response
 
 
-
 if __name__ == '__main__':
     
     io_logger = bool(os.getenv("IOLOGGER", default="FALSE").lower() == 'true')
     print('IOLOGGER: {}'.format(io_logger))
+
+    cors_allowed_origins = os.getenv("UI_URL", default="*")
+    print('UI_URL: {}'.format(cors_allowed_origins))
 
     app.logger.setLevel(logging.DEBUG)
     sio.run(app=app, host='0.0.0.0', port=8088)
