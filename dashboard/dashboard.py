@@ -11,6 +11,8 @@ cors_allowed_origins='*'
 
 app = Flask(__name__)
 
+
+# sio = SocketIO(app, logger=True,path='/api', engineio_logger=io_logger)
 sio = SocketIO(app, logger=True, cors_allowed_origins=[cors_allowed_origins], engineio_logger=io_logger)
 
 #
@@ -80,14 +82,6 @@ def process_event():
     # app.logger.debug(request.data.decode("utf-8"))
     
     data = json.loads(request.data.decode("utf-8"))
-
-    # Serializing json
-    json_object = json.dumps(data, indent=4)
-    
-    # Writing to sample.json
-    epoch_time = int(time.time())
-    with open(f"sample-{epoch_time}.json", "w") as outfile:
-        outfile.write(json_object)
 
     sio.emit('server2ui2', data, namespace='/ui2')
 
