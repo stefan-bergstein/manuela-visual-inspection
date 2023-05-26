@@ -11,9 +11,13 @@ spec:
   selector:
     app: dashboard
   ports:
-    - name: cloudevents
+    - name: web
       protocol: TCP
       port: 8088
+      targetPort: 8088
+    - name: cloudevents
+      protocol: TCP
+      port: 80
       targetPort: 8088
 ---
 apiVersion: apps/v1
