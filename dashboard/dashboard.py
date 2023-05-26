@@ -13,7 +13,9 @@ app = Flask(__name__)
 
 
 # sio = SocketIO(app, logger=True,path='/api', engineio_logger=io_logger)
-sio = SocketIO(app, logger=True, cors_allowed_origins=[cors_allowed_origins], engineio_logger=io_logger)
+# sio = SocketIO(app, logger=True, cors_allowed_origins=[cors_allowed_origins], engineio_logger=io_logger)
+sio = SocketIO(app, logger=True, engineio_logger=io_logger)
+
 
 #
 # HTML Pages
