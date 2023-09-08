@@ -227,7 +227,7 @@ Alternatively, you can just open the console of the `cvat` virtual machine, logi
 
 **Show unlabeled images on file systems**
 
-With your favorite file explorer, navigate to `manuela-visual-inspection/ml/darknet/data/metal_yolo` and filter for `png` files and explain the data: List of scratch bent and good images
+With your favorite file explorer, navigate to `manuela-visual-inspection/cam/data/metal_nut/scratch/` and filter for `png` files and explain the data: List of scratch bent and good images
 ![Unlabled Images](../images/unlabeled-images.png)
 
 
@@ -237,7 +237,7 @@ With your favorite file explorer, navigate to `manuela-visual-inspection/ml/dark
 - Create a new project `demo` and add the labels `scratch` and `bent` to the project:
 ![Create Project](../images/cvat-create-project.png)
 - Open the `demo` project and create a new task: ![Create Task](../images/create-task.png)
-- Name the task `metal-nut` and upload all `png` images from `manuela-visual-inspection/ml/darknet/data/metal_yolo/` using `Click or drag files to this area`: ![Upload Data](../images/upload-data.png)
+- Name the task `metal-nut` and upload `data.zip` images from `manuela-visual-inspection/ml/pytorch/` using `Click or drag files to this area`: ![Upload Data](../images/upload-data.png)
 - Submit task. `The data are being uploaded to the server..`
 - Navigate to `Tasks`: ![Tasks](../images/cvat-tasks.png)
 
@@ -248,7 +248,7 @@ Showcase manual annotation:
 
 Upload pre-labeled annotations:
 - Navigate to the Task list and select `Actions` -> `Upload Annotations` -> `YOLO 1.1`
-- Upload annotation file `metal-nut-annotations.zip` from `manuela-visual-inspection/ml/darknet/`.
+- Upload annotation file `metal-nut-annotations.zip` from `manuela-visual-inspection/ml/pytorch/`.
 - In case the warning `Current annotation will be lost` appears, press `Update`.
 
 Show pre-labeled data:
