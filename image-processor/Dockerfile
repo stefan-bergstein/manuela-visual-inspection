@@ -9,7 +9,7 @@ WORKDIR /app
 COPY *.* /app/
 
 RUN pip install --upgrade pip && \
-    python3 -m pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cpu
+    python3 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 USER 1001
 
