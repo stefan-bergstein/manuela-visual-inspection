@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: image-processor-conf
 data:
-  INFER_URL: "https://manuela-vi-onnx-ods-project-stefan.apps.ocp5.stormshift.coe.muc.redhat.com/v2/models/manuela-vi-onnx/infer"
+  INFER_URL: "https://manu-manu-vi.apps.cluster-69ncl.69ncl.sandbox392.opentlc.com/v2/models/manu/infer"
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -32,7 +32,7 @@ spec:
       containerConcurrency: 0
       containers:
         - name: image-processor
-          image: image-registry.openshift-image-registry.svc:5000/manuela-visual-inspection/image-processor:cpu
+          image: image-processor:cpu
           imagePullPolicy: Always
           ports:
           - containerPort: 8080

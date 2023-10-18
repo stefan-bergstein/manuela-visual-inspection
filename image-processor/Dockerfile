@@ -9,10 +9,9 @@ WORKDIR /app
 COPY *.* /app/
 
 RUN pip install --upgrade pip && \
-    pip install torch==2.0.0+cpu torchvision==0.15.1+cpu -f https://download.pytorch.org/whl/torch_stable.html  && \
-    python3 -m pip install -r requirements.txt
+    python3 -m pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cpu
 
-User 1001
+USER 1001
 
 EXPOSE 8080
 ENTRYPOINT ["python3"]
