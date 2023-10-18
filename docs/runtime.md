@@ -22,7 +22,7 @@ This section describes the installation of the runtime on OpenShift. The model t
 ## Prerequisites
 
 - S3 compatible object storage such as OpenShift Data Foundation.
-- Red Hat OpenShift Data Science (RHODS).
+- Red Hat OpenShift Data Science (RHODS). (Please refer to this [ml/README.md](../ml/README.md) to set up an example environment)
 - Red Hat OpenShift Serverless Operator is installed (knative)
 - Red Hat Integration - AMQ Streams Operator is installed (kafka)
 - This repo is cloned into your home directory
@@ -50,7 +50,7 @@ Create the namespace/project via the OpenShift CLI:
 oc new-project manuela-visual-inspection
 ```
 
-The provided manifest:
+Or via the provided manifest:
 
 ```
 oc apply -f manifests/namespace.yaml
@@ -58,16 +58,16 @@ oc apply -f manifests/namespace.yaml
 
 Or via the OpenShift WebConsole.
 
-In most cases, these are the common approaches to create resources in OpenShift. We will proceed with applying manifests from this repository and installing operators via the OperatorHub (which can also be done by applying manifests, but for this demo it's easier to do it like this). Feel free to take a look at these before applying to understand which resources are being created. A lot of these manifests can be self explanatory with the combination of the content of `kind` and `spec`.
+In most cases, these are the common approaches to create resources in OpenShift. We will proceed with applying manifests from this repository. Feel free to take a look at these before applying to understand which resources are being created. A lot of these manifests can be self explanatory with the combination of the content of `kind` and `spec`.
 
 ### Create a kafka cluster and topic
 
-Deploy the Red Hat Integration AMQ Streams operator first via the OperatorHub.
+Make sure the Red Hat Integration AMQ Streams operator is installed first via the OperatorHub.
 
 Then create a kafka cluster and topic:
 
 ```
-oc apply -f manifests/kafka-cluster.yaml
+oc apply -f manifests/kafka/kafka.yaml
 ```
 
 Wait until the cluster is up and running. E.g.:
@@ -89,16 +89,30 @@ manu-vi-zookeeper-2                                    1/1     Running   0      
 Create a topic for the images:
 
 ```
-oc apply -f manifests/kafka-topic-vs.yaml
+oc apply -f manifests/kafka/kafka-topic.yaml
 ```
 
 ### Set up Serverless
 
-Instantiate `KnativeServing` and `KnativeEventing` through the OpenShift Serverless operator.
+Make sure the Red Hat Serverless operator is installed first via the OperatorHub.
 
-Instantiate `KnativeKafka` and ensure the following properties are set in its specifications:
+Instantiate `KnativeServing`:
 
-- `spec.source.enabled`: `true`
+```
+oc apply -f manifests/serverless/knative-serving.yaml
+```
+
+Instantiate `KnativeEventing`:
+
+```
+oc apply -f manifests/serverless/knative-eventing.yaml
+```
+
+Instantiate `KnativeKafka`:
+
+```
+oc apply -f manifests/serverless/knative-kafka.yaml
+```
 
 ### Build the Camera simulator
 
