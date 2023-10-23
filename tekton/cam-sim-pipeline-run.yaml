@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: cam-sim-first-run
+  namespace: manuela-visual-inspection
+  finalizers:
+    - chains.tekton.dev/pipelinerun
+  labels:
+    tekton.dev/pipeline: manuela-visual-inspection
+spec:
+  params:
+    - name: IMAGE_TAG
+      value: 1.0.0
+    - name: IMAGE_NAME
+      value: quay.io/manuela/cam-sim
+    - name: GIT_REPO
+      value: 'https://github.com/stefan-bergstein/manuela-visual-inspection.git'
+    - name: GIT_BRANCH
+      value: main
+    - name: CONTEXT_DIR
+      value: cam
+    - name: CONTAINERFILE
+      value: Dockerfile      
+  pipelineRef:
+    name: manuela-visual-inspection
+  serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi

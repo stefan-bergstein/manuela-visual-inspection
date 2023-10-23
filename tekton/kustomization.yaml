@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: manuela-visual-inspection
+
+resources:
+  - pipeline.yaml
+  - cam-sim-pipeline-run.yaml
+  - image-processor-pipeline-run.yaml
+  - backend-pipeline-run.yaml
+  - ui-pipeline-run.yaml
+
+  

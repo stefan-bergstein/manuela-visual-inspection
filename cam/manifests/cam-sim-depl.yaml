@@ -29,7 +29,8 @@ spec:
     spec:
       containers:
         - name: cam-sim
-          image: cam-sim:latest
+          image: quay.io/manuela/cam-sim:1.0.0
+#          image: cam-sim:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

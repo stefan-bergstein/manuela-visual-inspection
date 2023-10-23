@@ -32,7 +32,8 @@ spec:
       containerConcurrency: 0
       containers:
         - name: image-processor
-          image: image-processor:cpu
+          image: quay.io/manuela/image-processor:1.0.0
+#          image: image-processor:cpu
           imagePullPolicy: Always
           ports:
           - containerPort: 8080
