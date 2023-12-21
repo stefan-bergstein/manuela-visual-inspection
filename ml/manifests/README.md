@@ -14,9 +14,9 @@ oc apply -f https://raw.githubusercontent.com/mamurak/os-mlops/master/manifests/
 
 ## Load a pre-train model into minio bucket (the lazy way)
 
-```
-**The following approach does not work anymore with the latest version of minio. Please use S3 CLI/API**
 
+**The following approach does not work anymore with the latest version of minio. Please use S3 CLI/API**
+```
 BUCKET=manu-vi
 
 oc exec -n minio deploy/minio -- mkdir -p data/${BUCKET}
